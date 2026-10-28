@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Architecture rules
+        run: node tool/check-architecture.mjs
+
+      - name: Test names
+        run: node tool/check-test-names.mjs
+
+      - name: Install dependencies
+        run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Detect NestJS app
+        id: detect
+        run: echo "present=$([ -d src ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Lint (warnings fail)
+        if: steps.detect.outputs.present == 'true'
+        run: npm run lint -- --max-warnings=0
+
+      - name: Format check
+        if: steps.detect.outputs.present == 'true'
+        run: npm run format:check
+
+      - name: Build
+        if: steps.detect.outputs.present == 'true'
+        run: npm run build
+
+      - name: Unit tests with coverage
+        if: steps.detect.outputs.present == 'true'
+        run: npm test -- --coverage
+
+      - name: Integration tests
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:e2e
+
+      - name: Coverage gate
+        if: steps.detect.outputs.present == 'true'
+        run: node tool/check-coverage.mjs
+
+  commits:
+    name: commits
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
+
+  pr-title:
+    name: pr-title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

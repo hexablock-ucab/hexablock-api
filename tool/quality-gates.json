@@ -1,0 +1,10 @@
+{
+  "$comment": "Minimum line coverage enforced in CI by tool/check-coverage.mjs, only where the graded logic lives (domain and use cases). The total is reported but does not block (totalMin: null). Paths follow the PROPOSED layout of ADR-0003.",
+  "coverage": {
+    "totalMin": null,
+    "areas": [
+      { "path": "src/domain", "min": 90 },
+      { "path": "src/application", "min": 90 }
+    ]
+  }
+}
