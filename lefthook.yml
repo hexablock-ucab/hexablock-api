@@ -1,0 +1,14 @@
+# Git hooks shared by the team. Installed by `npm install` (see CONTRIBUTING.md).
+# Task 0001 adds a pre-commit Prettier check once Prettier is installed.
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}
+
+pre-push:
+  parallel: true
+  commands:
+    architecture:
+      run: node tool/check-architecture.mjs
+    test-names:
+      run: node tool/check-test-names.mjs
