@@ -1,0 +1,41 @@
+{
+  "$comment": "Architecture rules as checks (C-05, NFR-03, NFR-07). Paths follow the PROPOSED layout of ADR-0003; update them in the same PR that accepts or changes that ADR. Rules whose folders do not exist yet are skipped.",
+  "sourceExtensions": [".ts"],
+  "rules": [
+    {
+      "id": "domain-is-framework-free",
+      "paths": ["src/domain"],
+      "forbidden": [
+        { "pattern": "from\\s+['\"]@nestjs/", "reason": "The domain must not depend on NestJS." },
+        { "pattern": "from\\s+['\"](@prisma/|typeorm|drizzle-orm|mongoose|pg)['\"/]", "reason": "The domain must not depend on a database library." },
+        { "pattern": "from\\s+['\"](express|jsonwebtoken|bcrypt|bcryptjs|axios)['\"]", "reason": "The domain must not depend on I/O or security libraries." },
+        { "pattern": "from\\s+['\"](\\.\\./)+(application|interface-adapters|frameworks)/", "reason": "Dependency Rule: the domain must not import outer layers." }
+      ]
+    },
+    {
+      "id": "use-cases-depend-only-on-domain",
+      "paths": ["src/application"],
+      "forbidden": [
+        { "pattern": "from\\s+['\"]@nestjs/", "reason": "Use cases must not depend on NestJS; they are wired in src/frameworks." },
+        { "pattern": "from\\s+['\"](@prisma/|typeorm|drizzle-orm|mongoose|pg)['\"/]", "reason": "Use cases depend on repository ports, not on a database library." },
+        { "pattern": "from\\s+['\"](express|jsonwebtoken|bcrypt|bcryptjs|axios)['\"]", "reason": "Use cases depend on ports, not on I/O or security libraries." },
+        { "pattern": "from\\s+['\"](\\.\\./)+(interface-adapters|frameworks)/", "reason": "Dependency Rule: use cases must not import outer layers." }
+      ]
+    },
+    {
+      "id": "adapters-do-not-import-frameworks",
+      "paths": ["src/interface-adapters"],
+      "forbidden": [
+        { "pattern": "from\\s+['\"](\\.\\./)+frameworks/", "reason": "Dependency Rule: interface adapters must not import the frameworks layer." }
+      ]
+    },
+    {
+      "id": "no-game-specific-code-in-the-core",
+      "paths": ["src/domain", "src/application"],
+      "except": ["src/domain/level-schemas"],
+      "forbidden": [
+        { "pattern": "['\"]hexa-(lines|fit|sort|merge)['\"]", "reason": "gameId is data: no code path for one specific game outside the level-schema validators (FR-21, FR-23)." }
+      ]
+    }
+  ]
+}
