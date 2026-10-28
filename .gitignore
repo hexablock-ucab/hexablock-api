@@ -1,0 +1,21 @@
+# Node / NestJS
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Claude Code personal files
+.claude/settings.local.json
+CLAUDE.local.md
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
