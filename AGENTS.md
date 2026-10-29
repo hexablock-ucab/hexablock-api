@@ -44,7 +44,7 @@ Proposed layout (ADR-0003):
 | 3. Interface adapters | `src/interface-adapters/` (controllers, presenters, DTOs, mappers, repository implementations) | layers 1–2 |
 | 4. Frameworks and drivers | `src/frameworks/` (NestJS modules, ORM schema, database, JWT, configuration, `main.ts`) | everything |
 
-Binding rules (C-05, C-08, NFR-02, NFR-03, NFR-07):
+Binding rules (C-05, C-08, C-22, NFR-02, NFR-03):
 
 - The domain and the use cases never import `@nestjs/*`, an ORM, `express`, `jsonwebtoken`, `bcrypt` or any I/O library. Framework decorators live in layers 3–4 only.
 - Ports (interfaces) are declared in the inner layer that **uses** them, usually `src/application/ports/`. Adapters implement them in an outer layer.
@@ -55,7 +55,7 @@ Binding rules (C-05, C-08, NFR-02, NFR-03, NFR-07):
 - `tool/check-architecture.mjs` enforces the import rules and the `gameId` rule from `tool/architecture-rules.json`, in the `pre-push` hook and in CI. A violation fails the build.
 - **Do not over-engineer.** Add an abstraction only when a requirement, an ADR or a second real implementation needs it. Abstractions declared in an ADR are requirements, not speculation.
 
-The professor's guidance: the design must survive change (another client, another database, another team's frontend) without rewriting the project. Hard-coded low-level details are the main thing he penalizes.
+The professor's guidance: the design must absorb a change in a low-level detail (for example another database or another client) without rewriting the project; he may ask for such a change shortly before the defense. Hard-coded low-level details are the main thing he penalizes.
 
 ## 4. Code conventions
 
