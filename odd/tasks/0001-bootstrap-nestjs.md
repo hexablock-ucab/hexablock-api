@@ -28,6 +28,7 @@ There is no code yet. Every later task needs the layer folders, the npm scripts 
 - **S5** (FR-24): Swagger UI is served at `/api/docs`, and `npm run openapi:export` writes `docs/openapi.yaml`.
 - **S6** (C-02): The README *Getting Started* section records the Node and npm versions; `package-lock.json` is committed.
 
+- **S7** (C-13): Given production code and a test step that finds no tests, when CI runs, then it fails; every CI run prints how many tests ran. A green check that verified nothing is not accepted.
 ## Allowed edit surfaces
 
 - `package.json`, `package-lock.json`, `tsconfig*.json`, `nest-cli.json`, `eslint.config.*`, `.prettierrc*`, `.env.example`
@@ -35,6 +36,7 @@ There is no code yet. Every later task needs the layer folders, the npm scripts 
 - `lefthook.yml` (add the `pre-commit` format check)
 - `docs/openapi.yaml`
 - `README.md` (*Getting Started*, *Running Tests*)
+- `tool/**` and `.github/workflows/ci.yml` (S7 only)
 
 ## Tasks
 
@@ -70,6 +72,7 @@ node tool/check-coverage.mjs
 | S4 | | |
 | S5 | | |
 | S6 | | |
+| S7 | | |
 
 ## Open questions
 
