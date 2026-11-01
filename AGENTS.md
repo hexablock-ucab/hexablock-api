@@ -76,6 +76,8 @@ The professor's guidance: the design must absorb a change in a low-level detail 
 - Structure every test as Arrange – Act – Assert, with a blank line between the parts.
 - Test behavior through public interfaces, never private state. No fragile tests.
 - **Unit:** domain and use cases with in-memory fakes for ports.
+- Avoid structural coupling: a test exercises one behavior through the public API of a use case or an endpoint, not one test per class or method. Use real domain objects; replace only what sits behind a port.
+- Integration tests create the database the way production does, by running the migrations; never rely on the ORM synchronizing the schema.
 - **Integration:** use cases with real repositories on an in-memory or containerized database; endpoints with `supertest`, including the `gameId` filter, validation errors and authorization.
 - **Contract (recommended):** verify the API against the client's expectations from `docs/openapi.yaml`.
 
