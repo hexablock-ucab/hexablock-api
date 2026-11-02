@@ -9,6 +9,19 @@ Mandatory diagrams (assignment §4, requirement C-11). Each one is kept as an **
 
 Whether the backend repository also needs these diagrams is an open question for the professor; the team plans them for both repositories.
 
+## Legend (the professor's convention in class)
+
+Every class in the class diagram shows its layer with a color and a shape, as the professor draws them:
+
+| Layer | Color | Mark | Contents |
+|---|---|---|---|
+| Domain (entities) | Yellow | Triangle | Entities, value objects, domain services, builders, rules |
+| Application (use cases) | Purple | Square | Services that implement the use cases |
+| Ports | Green | — | Interfaces: input (driving) ports on the left, output (driven) ports on the right |
+| Infrastructure (interface adapters, frameworks and drivers) | Blue | Circle | View models, controllers, repository implementations, adapters to external services |
+
+The Clean layers diagram keeps the four rings the assignment requires (§3.4); the class diagram uses this legend, so blue covers both outer rings.
+
 ## Conventions
 
 - Text sources (PlantUML) are preferred where the diagram allows it: changes are reviewable in a pull request. draw.io is used where the layout matters, such as the concentric layers.
