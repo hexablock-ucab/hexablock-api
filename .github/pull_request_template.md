@@ -4,7 +4,7 @@
 
 ## Traceability
 
-- Requirements: <!-- e.g. FR-21, NFR-09 -->
+- Requirements: <!-- e.g. FR-21, C-24 -->
 - Task document: <!-- odd/tasks/NNNN-slug.md, or "small change" -->
 - ADRs: <!-- if any -->
 

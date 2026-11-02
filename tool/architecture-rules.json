@@ -1,5 +1,5 @@
 {
-  "$comment": "Architecture rules as checks (C-05, NFR-03, NFR-07). Paths follow the PROPOSED layout of ADR-0003; update them in the same PR that accepts or changes that ADR. Rules whose folders do not exist yet are skipped.",
+  "$comment": "Architecture rules as checks (C-05, C-22, NFR-03). Paths follow the PROPOSED layout of ADR-0003; update them in the same PR that accepts or changes that ADR. Rules whose folders do not exist yet are skipped.",
   "sourceExtensions": [".ts"],
   "rules": [
     {

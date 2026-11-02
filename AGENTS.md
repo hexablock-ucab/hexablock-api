@@ -27,6 +27,18 @@ Read these before you design or change behavior. Do not rely on memory or summar
 | `README.md` | The public face of the project. It is graded. |
 | `AI_USAGE.md` | Mandatory log of AI usage. It is graded. |
 
+### Course sources and questions for the professor
+
+The team's private workspace sits next to this repository (`../hexablock-workspace`). When it is present, read from it (never write to it from here):
+
+- `../hexablock-workspace/context/proyecto/ENUNCIADO_HexaBlockSuite_v1.0.md`: the assignment. It overrides every other source, and `docs/requirements.md` traces to it. Read the section itself; do not rely on a summary.
+- `../hexablock-workspace/library/README.md`: maps each topic (Clean Architecture, SOLID, GoF patterns, generics, AOP, DDD, testing, UML) to the chapters of the books the professor published. Read only the chapter you need.
+- `../hexablock-workspace/docs/preguntas-profesor.md`: what the professor already clarified in class.
+
+Never copy text from these folders into this repository: the books are copyrighted and the course material is internal. Cite author and chapter instead. If the folders are missing, say so and continue with `docs/requirements.md`.
+
+When the assignment is ambiguous, or a choice affects grading and is not the team's to make, stop and tell the user; never resolve it silently. The team keeps these questions as issues labeled `pregunta-profesor` in the workspace repository: check the open ones first and, with the user's approval, create one in Spanish (`gh issue create -R hexablock-ucab/hexablock-workspace --label pregunta-profesor --label prioridad-<alta|media|baja> --title "..." --body "..."`).
+
 ## 3. Architecture rules (Clean Architecture)
 
 > **Decision status.** The assignment fixes Clean Architecture and the Dependency Rule (C-05) and aspects for cross-cutting concerns (C-08): those rules are binding now.
@@ -44,7 +56,7 @@ Proposed layout (ADR-0003):
 | 3. Interface adapters | `src/interface-adapters/` (controllers, presenters, DTOs, mappers, repository implementations) | layers 1–2 |
 | 4. Frameworks and drivers | `src/frameworks/` (NestJS modules, ORM schema, database, JWT, configuration, `main.ts`) | everything |
 
-Binding rules (C-05, C-08, NFR-02, NFR-03, NFR-07):
+Binding rules (C-05, C-08, C-22, NFR-02, NFR-03):
 
 - The domain and the use cases never import `@nestjs/*`, an ORM, `express`, `jsonwebtoken`, `bcrypt` or any I/O library. Framework decorators live in layers 3–4 only.
 - Ports (interfaces) are declared in the inner layer that **uses** them, usually `src/application/ports/`. Adapters implement them in an outer layer.
@@ -55,13 +67,15 @@ Binding rules (C-05, C-08, NFR-02, NFR-03, NFR-07):
 - `tool/check-architecture.mjs` enforces the import rules and the `gameId` rule from `tool/architecture-rules.json`, in the `pre-push` hook and in CI. A violation fails the build.
 - **Do not over-engineer.** Add an abstraction only when a requirement, an ADR or a second real implementation needs it. Abstractions declared in an ADR are requirements, not speculation.
 
-The professor's guidance: the design must survive change (another client, another database, another team's frontend) without rewriting the project. Hard-coded low-level details are the main thing he penalizes.
+The professor's guidance: the design must absorb a change in a low-level detail (for example another database or another client) without rewriting the project; he may ask for such a change shortly before the defense. Hard-coded low-level details are the main thing he penalizes.
 
 ## 4. Code conventions
 
 - Everything in the repository is **English**: code, identifiers, comments, docs, commit messages, PR text. Team chat and `odd/tasks` logs may be Spanish.
 - TypeScript `strict` mode. No `any` without a comment that justifies it.
 - Names say what a thing is in the domain: `PlayerProgress`, `LeaderboardEntry`, `LevelDefinition`. No `Manager`, `Helper`, `Util` or `Data` suffix without a real reason.
+- **No primitive obsession** (professor's guidance in class): the domain and the use cases model their concepts as value objects, not as bare numbers or strings: coordinates, identifiers, scores, colors, tile values, `gameId`. Booleans are acceptable. Primitives appear only at the boundaries (DTOs, persistence, UI) and the mappers in layer 3 convert them. A value object validates itself when created and compares by value.
+- **Names say the role and the layer** (professor's guidance): input ports are interfaces named after the use case (`SyncProgressUseCase`, `GetLeaderboardUseCase`); the application class that implements them is a service (`ProgressService`); output ports name what the inner layer needs (`ProgressRepository`, `TokenService`, `Clock`); adapters name the technology and the role (`PostgresProgressRepository`, `JwtTokenService`); presentation classes name their screen (`ProgressController`). Repositories, factories, builders and value objects carry those names too.
 - One reason to change per class (SRP). Small interfaces (ISP). Depend on abstractions (DIP).
 - Use bounded generics when a use case needs a capability of its input (for example `TLevel extends LevelDefinition`). Document each bound in the README.
 - Consistent responses: one success envelope and one error format (RFC 9457 *problem details* or the team's documented equivalent), mapped from domain errors in one exception filter.
@@ -76,6 +90,8 @@ The professor's guidance: the design must survive change (another client, anothe
 - Structure every test as Arrange – Act – Assert, with a blank line between the parts.
 - Test behavior through public interfaces, never private state. No fragile tests.
 - **Unit:** domain and use cases with in-memory fakes for ports.
+- Avoid structural coupling: a test exercises one behavior through the public API of a use case or an endpoint, not one test per class or method. Use real domain objects; replace only what sits behind a port.
+- Integration tests create the database the way production does, by running the migrations; never rely on the ORM synchronizing the schema.
 - **Integration:** use cases with real repositories on an in-memory or containerized database; endpoints with `supertest`, including the `gameId` filter, validation errors and authorization.
 - **Contract (recommended):** verify the API against the client's expectations from `docs/openapi.yaml`.
 
@@ -131,3 +147,12 @@ npm run test:e2e                     # integration and endpoint tests
 ```
 
 The quality gates are described in `CONTRIBUTING.md`. A rule that matters has a check; if you add a rule here, add its check too.
+
+## 10. Working with another AI agent (Codex, ChatGPT, Copilot)
+
+Everything above applies to any agent. Claude Code adds automation in `.claude/`; other agents can use the same material by hand:
+
+- `.claude/skills/<name>/SKILL.md` and `.claude/agents/*.md` are plain Markdown instructions. Ask the agent to read and follow one, for example: "read `.claude/skills/ship/SKILL.md` and follow it to open the pull request".
+- For a substantial task, create the task document from `odd/_TEMPLATE.md`, get the specs approved, then implement test first (`odd/README.md`).
+- The git hooks (lefthook), the CI and the protection of `main` apply to everyone, whatever the agent. The Claude Code hooks do not run in other agents, so never use `--no-verify`, never push to `main` and never force-push.
+- Record the tool and model in `AI_USAGE.md` (for example "Codex, GPT-5") in every entry.
