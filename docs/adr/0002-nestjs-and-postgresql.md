@@ -4,7 +4,7 @@
 - **Date:** 2026-10-28
 - **Proposed by:** Eduard Velasco
 - **Deciders:** —
-- **Requirements:** C-02, C-24, C-26, FR-20 to FR-25, NFR-06
+- **Requirements:** C-02, C-24, C-26, C-28, FR-20 to FR-25, NFR-06
 
 ## Context
 
@@ -29,4 +29,4 @@ NestJS is a **framework detail** (layer 4): its decorators and modules stay out 
 - TypeScript generics are erased at runtime; the generic model by `gameId` relies on validation at the boundary (DTO and level-schema validators).
 - NestJS's own interceptors are **not** our AOP mechanism: the assignment asks for aspects built with SOLID techniques (decorators/proxies around use cases), see C-08.
 - The ORM (Prisma, TypeORM or Drizzle) is chosen in task 0001 and recorded in a follow-up ADR.
-- Where the API and the database run (local only, or a public host) depends on a question for the professor: whether the backend must be deployed for the defense and the release.
+- The API and the database must run on a public cloud host for the delivery and the defense (C-28, professor's answer on 2026-11-05). The provider is chosen in a follow-up ADR.

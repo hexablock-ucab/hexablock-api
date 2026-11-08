@@ -41,7 +41,7 @@ When the assignment is ambiguous, or a choice affects grading and is not the tea
 
 ## 3. Architecture rules (Clean Architecture)
 
-> **Decision status.** The assignment fixes Clean Architecture and the Dependency Rule (C-05) and aspects for cross-cutting concerns (C-08): those rules are binding now.
+> **Decision status.** The assignment fixes Clean Architecture and the Dependency Rule (C-05) and at least one aspect for a cross-cutting concern, required in this repository (C-08): those rules are binding now.
 > NestJS with TypeScript (ADR-0002), the folder layout below (ADR-0003) and the contract-first model by `gameId` (ADR-0004) are **Proposed**.
 > Until the team accepts those ADRs, do not scaffold the project or choose a database; ask the user instead.
 
@@ -67,14 +67,14 @@ Binding rules (C-05, C-08, C-22, NFR-02, NFR-03):
 - `tool/check-architecture.mjs` enforces the import rules and the `gameId` rule from `tool/architecture-rules.json`, in the `pre-push` hook and in CI. A violation fails the build.
 - **Do not over-engineer.** Add an abstraction only when a requirement, an ADR or a second real implementation needs it. Abstractions declared in an ADR are requirements, not speculation.
 
-The professor's guidance: the design must absorb a change in a low-level detail (for example another database or another client) without rewriting the project; he may ask for such a change shortly before the defense. Hard-coded low-level details are the main thing he penalizes.
+The professor's guidance (class, and the team's meeting with him on 2026-11-05): the day before the defense he may ask for a change in a low-level detail, for example another database, and the design must absorb it without rewriting the project; he never asks to change the architecture (C-31, NFR-02). The backend is one deployable service organized in modules, not microservices (C-29), and it is deployed on a public cloud host (C-28). Hard-coded low-level details are the main thing he penalizes.
 
 ## 4. Code conventions
 
 - Everything in the repository is **English**: code, identifiers, comments, docs, commit messages, PR text. Team chat and `odd/tasks` logs may be Spanish.
 - TypeScript `strict` mode. No `any` without a comment that justifies it.
 - Names say what a thing is in the domain: `PlayerProgress`, `LeaderboardEntry`, `LevelDefinition`. No `Manager`, `Helper`, `Util` or `Data` suffix without a real reason.
-- **No primitive obsession** (professor's guidance in class): the domain and the use cases model their concepts as value objects, not as bare numbers or strings: coordinates, identifiers, scores, colors, tile values, `gameId`. Booleans are acceptable. Primitives appear only at the boundaries (DTOs, persistence, UI) and the mappers in layer 3 convert them. A value object validates itself when created and compares by value.
+- **No primitive obsession** (professor's guidance in class and on 2026-11-05): the domain and the use cases model their concepts as value objects, not as bare numbers or strings: coordinates, identifiers, scores, colors, tile values, `gameId`. Booleans, and an integer that only expresses a quantity, are acceptable (C-32). Primitives appear only at the boundaries (DTOs, persistence, UI) and the mappers in layer 3 convert them. A value object validates itself when created and compares by value.
 - **Names say the role and the layer** (professor's guidance): input ports are interfaces named after the use case (`SyncProgressUseCase`, `GetLeaderboardUseCase`); the application class that implements them is a service (`ProgressService`); output ports name what the inner layer needs (`ProgressRepository`, `TokenService`, `Clock`); adapters name the technology and the role (`PostgresProgressRepository`, `JwtTokenService`); presentation classes name their screen (`ProgressController`). Repositories, factories, builders and value objects carry those names too.
 - One reason to change per class (SRP). Small interfaces (ISP). Depend on abstractions (DIP).
 - Use bounded generics when a use case needs a capability of its input (for example `TLevel extends LevelDefinition`). Document each bound in the README.

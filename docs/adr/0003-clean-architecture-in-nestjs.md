@@ -4,7 +4,7 @@
 - **Date:** 2026-10-28
 - **Proposed by:** Eduard Velasco
 - **Deciders:** —
-- **Requirements:** C-05, C-08, C-22, NFR-02, NFR-03
+- **Requirements:** C-05, C-08, C-22, C-29, NFR-02, NFR-03
 
 ## Context
 
