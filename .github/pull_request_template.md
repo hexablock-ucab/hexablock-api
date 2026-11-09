@@ -18,6 +18,6 @@
 - [ ] No inner layer depends on an outer one; nothing specific to one `gameId` outside the level-schema validators.
 - [ ] `docs/openapi.yaml` regenerated if an endpoint changed; breaking changes flagged.
 - [ ] README / diagrams updated if affected.
-- [ ] `AI_USAGE.md` entry added for significant AI-assisted work.
+- [ ] `AI_USAGE.md` entry added and complete (no pending fields) for significant AI-assisted work.
 - [ ] Third-party code or assets cited in code and in `THIRD_PARTY_NOTICES.md`.
 - [ ] PR title follows Conventional Commits (it becomes the squash commit).
