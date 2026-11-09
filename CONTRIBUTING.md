@@ -66,4 +66,5 @@ Run them locally with `npm run check:architecture`, `npm run check:test-names` a
 - Tests were written first where applicable and pass.
 - No inner layer depends on an outer one; nothing specific to one `gameId` outside the level-schema validators.
 - README, `docs/openapi.yaml` and diagrams are updated if affected.
-- `AI_USAGE.md` has an entry for significant AI-assisted work.
+- `AI_USAGE.md` has a complete entry (no pending fields) for significant AI-assisted work.
+- The README states no hand-written counts (tests, endpoints, classes); numbers that matter come from CI.
