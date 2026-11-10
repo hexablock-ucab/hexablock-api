@@ -83,6 +83,29 @@ Low-level details are replaceable: a low-level detail such as the database may c
 - Prefer the platform and already-installed packages. A new dependency needs a one-line justification in the PR and must be mainstream and maintained.
 - Lint and format are clean before you finish; CI fails on any warning.
 
+### Domain model (DDD tactical patterns)
+
+Sources: Evans (2003) as presented in the course's Clean Architecture class; Esposito, *Clean Architecture with .NET* (2024), chapters 6 and 7. `docs/domain-model.md` (deliverable D4) lists every domain class with its tactical role; update it in the same PR as the code.
+
+- **Rich model.** Behavior lives with the data it protects. Entities and aggregate roots expose **commands** named after the business intent (`recordLevelCompleted`, `submitScore`) and **queries** named after what a rule or a client asks (`bestStarsFor(levelId)`, `hasCompleted(levelId)`). Each command checks its invariants before it changes anything. Fields are `private readonly` where they never change and `private` otherwise; a getter is a derived domain query, never a mirror of a field so that another class can decide.
+- **Tell, don't ask.** When a use case reads a domain object's state, decides, and writes the result back, the decision belongs inside the domain object: move it there. Use cases orchestrate (load, call a command, save, publish) and hold no business rule. This is how the code avoids the *anemic domain model* the course warns against.
+- **Value objects** are immutable: an operation returns a new value (`score.add(points)`). They compare with an `equals` method.
+- **Persistence stays outside the model.** ORM rows are separate classes in layer 4. The repository maps them and rebuilds the aggregate through a named static method (`PlayerProgress.restore(...)`), so the domain needs no public setter or empty constructor for the ORM.
+- **Aggregates.** An aggregate is the consistency boundary of an invariant, and its root is the only entry point from outside. Other objects reference an aggregate by its identity (`UserId`), not by holding it. One repository per aggregate root, and it saves and loads the whole aggregate in one transaction. Create an aggregate only where an invariant spans several objects; a lone entity is its own root.
+- **Domain services** are stateless and named after a domain operation. Use one for a rule that spans several aggregates or fits none. The class that implements a use case is an *application* service (`ProgressService`), not a domain service.
+- **Domain events** have past-tense names (`LevelCompleted`, `LevelPublished`). The aggregate raises them, and only when another part of the system reacts.
+- **Label each class with the role it really plays**, in code names, docs and diagrams. Several of our classes are GoF patterns or Clean Architecture parts, not DDD patterns:
+
+| Class or kind | Role |
+|---|---|
+| `UserId`, `GameId`, `LevelId`, `Score` | DDD value objects |
+| Player progress, user account | DDD entities; aggregate roots where D4 says so |
+| `ProgressService` | Application service: implements a use case |
+| `ProgressRepository` | DDD repository. The interface lives in layer 2, where it is used (section 3); in classic DDD it sits in the domain |
+| Level-schema validator per `gameId` | GoF Strategy selected by `gameId` |
+| Logging, timing or authorization decorator (C-08) | Aspect (Decorator or proxy); no DDD role |
+| DTOs, controllers, mappers, ORM rows | Boundary types of layers 3 and 4; no DDD role |
+
 ## 5. Tests
 
 - Test first when a deterministic, runnable test exists: RED, then GREEN, then REFACTOR.
