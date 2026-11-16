@@ -1,0 +1,28 @@
+{
+  "formatVersion": 1,
+  "gameId": "hexa-fit",
+  "levelId": "hexa-fit-003",
+  "number": 3,
+  "version": 1,
+  "difficulty": 1,
+  "board": {
+    "topology": "hex",
+    "shape": {
+      "kind": "cells",
+      "cells": [[0, -2], [1, -2], [0, -1], [1, -1], [-1, 0], [0, 0], [1, 0], [-2, 1], [-1, 1], [-1, 2]]
+    }
+  },
+  "payload": {
+    "pieces": [
+      { "cells": [[0, 0], [0, 1], [1, 0]] },
+      { "cells": [[0, 0], [1, -1], [1, 0], [1, 1]] },
+      { "cells": [[0, 0], [0, -1], [1, -2]] }
+    ],
+    "par": { "moves": 9, "seconds": 40 },
+    "solution": [
+      { "at": [1, -1], "rotation": 1 },
+      { "at": [0, -2], "rotation": 1 },
+      { "at": [-2, 1], "rotation": 2 }
+    ]
+  }
+}

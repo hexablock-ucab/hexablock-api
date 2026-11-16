@@ -68,7 +68,7 @@ One rotation step for `"hex"` maps `[q, r]` to `[-r, q + r]` (Red Blob Games, *H
 "payload": {
   "goal": 1,
   "tray": { "seed": 1001, "colors": ["red", "cyan", "green"], "stackSize": { "min": 1, "max": 4 } },
-  "moveThresholds": [24, 18]
+  "moveThresholds": [15, 10]
 }
 ```
 
