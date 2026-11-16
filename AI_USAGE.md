@@ -73,6 +73,18 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Errors and corrections:** None found yet.
 - **Lessons:** Let the rules document say *what* a level needs and keep the format to *how*; then each field traces to a rule.
 
+### 2026-11-16 — The 15 Hexa Fit and 10 Hexa Sort levels ([odd/tasks/0003-hand-designed-levels.md](odd/tasks/0003-hand-designed-levels.md))
+
+- **Author:** Valentina Maza
+- **Tool / model:** Claude (claude.ai agent session, configured model Claude Opus 5.5). The professor allows generating levels with AI if it is recorded (meeting of 2026-11-05, answer 18).
+- **Task:** Design the levels the assignment asks for (FR-46, FR-55) in the format of task 0002, with progressive difficulty.
+- **Prompts (faithful paraphrase; original in Spanish):**
+  - "Yes!!" (answering the offer to design the 15 Hexa Fit and 10 Hexa Sort levels now, each Hexa Fit level with a solution checked by a script)
+- **Result:** 25 level files, a summary and a preview in `levels/`. Hexa Fit: candidates generated, their solutions counted with an exact-cover solver, one picked per level (unique solution from level 8). Hexa Sort: a simulator of SORT-1 to SORT-5 with a greedy player, 400 games per level, set the thresholds and checked that each level can be won.
+- **Team modifications:** Pending: the team reviews the levels; Valentina play-tests levels 1, 8 and 15.
+- **Errors and corrections:** The first Hexa Fit draft made the player rotate pieces up to 5 steps and jumped from many solutions to one at level 5; detected in the generator's report; pieces now arrive 1 to 3 steps away, and the solution count falls more gradually (levels 5–7 have about 4 solutions).
+- **Lessons:** Generate many candidates and choose by a measurable criterion (solution count, simulated win rate) rather than designing one level at a time; the numbers make "progressive difficulty" checkable.
+
 ## Critical evaluation
 
 - **Approximate share of code with AI assistance:** TODO (updated at the end of the project).
