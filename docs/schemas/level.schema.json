@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hexablock-ucab/hexablock-api/blob/main/docs/schemas/level.schema.json",
+  "title": "HexaBlock Suite level definition",
+  "description": "One generic level schema with a payload specific to each gameId (FR-23, ADR-0004). The format is described in docs/level-format.md. JSON Schema checks the shape only; the rules that need geometry (connected figure, no holes, equal area) are checked by the level builder and the API's validator for each gameId.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formatVersion", "gameId", "levelId", "number", "version", "difficulty", "board", "payload"],
+  "properties": {
+    "formatVersion": {
+      "description": "Version of this format. A reader rejects a file whose formatVersion it does not know.",
+      "const": 1
+    },
+    "gameId": {
+      "description": "The variant that plays this level. Only level-based variants have level files.",
+      "enum": ["hexa-fit", "hexa-sort"]
+    },
+    "levelId": {
+      "description": "Stable identifier: the gameId, a hyphen and the level number in three digits. It never changes, even when the level is edited.",
+      "type": "string",
+      "pattern": "^hexa-(fit|sort)-[0-9]{3}$"
+    },
+    "number": {
+      "description": "Position of the level in its variant's progression, starting at 1. The next level is number + 1.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "version": {
+      "description": "Edit counter of this level, starting at 1. It grows by 1 every time the level changes, so a client knows which levels to download again (FR-14).",
+      "type": "integer",
+      "minimum": 1
+    },
+    "difficulty": {
+      "description": "Designer's difficulty from 1 (easiest) to 5 (hardest), used to check that the progression is progressive (FR-46, FR-55).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "board": { "$ref": "#/$defs/board" },
+    "payload": {
+      "description": "The section specific to the gameId. Its shape is chosen by the rules below.",
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "gameId": { "const": "hexa-fit" } } },
+      "then": {
+        "properties": {
+          "levelId": { "pattern": "^hexa-fit-[0-9]{3}$" },
+          "board": { "properties": { "shape": { "$ref": "#/$defs/cellListShape" } } },
+          "payload": { "$ref": "#/$defs/hexaFitPayload" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "gameId": { "const": "hexa-sort" } } },
+      "then": {
+        "properties": {
+          "levelId": { "pattern": "^hexa-sort-[0-9]{3}$" },
+          "payload": { "$ref": "#/$defs/hexaSortPayload" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "coordinate": {
+      "description": "A cell coordinate as a list of integers. The topology says how many there are and what they mean; for \"hex\" it is [q, r] in axial coordinates.",
+      "type": "array",
+      "items": { "type": "integer" },
+      "minItems": 1
+    },
+    "cellList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/coordinate" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "board": {
+      "description": "The board of the level: a topology and a shape in that topology (ADR-0004, ADR-0006 in the client).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topology", "shape"],
+      "properties": {
+        "topology": {
+          "description": "The grid geometry. Only \"hex\" exists today (axial coordinates, 6 neighbors, 60 degree rotation). Another geometry is a new value here and a new topology in the client, never a new schema.",
+          "enum": ["hex"]
+        },
+        "shape": {
+          "oneOf": [
+            { "$ref": "#/$defs/hexagonShape" },
+            { "$ref": "#/$defs/cellListShape" }
+          ]
+        }
+      }
+    },
+    "hexagonShape": {
+      "description": "A regular region of the topology around the origin. For \"hex\", radius 2 gives 19 cells (FR-50).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "radius"],
+      "properties": {
+        "kind": { "const": "regular" },
+        "radius": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "cellListShape": {
+      "description": "An arbitrary set of cells, listed one by one. Hexa Fit uses it for the figure (FR-40).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "cells"],
+      "properties": {
+        "kind": { "const": "cells" },
+        "cells": { "$ref": "#/$defs/cellList" }
+      }
+    },
+    "color": {
+      "description": "A tile color. The client maps each name to its palette and its glyph (UI mockups, D12).",
+      "enum": ["red", "orange", "yellow", "green", "cyan", "violet"]
+    },
+    "hexaFitPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pieces", "par"],
+      "properties": {
+        "pieces": {
+          "description": "The fixed set of pieces (FR-40, FIT-2). Each piece lists its cells relative to its own origin [0, 0], which is also the point it rotates around.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["cells"],
+            "properties": {
+              "cells": { "$ref": "#/$defs/cellList" }
+            }
+          }
+        },
+        "par": {
+          "description": "The two thresholds of FIT-3: one extra star for moves <= moves, one for whole seconds <= seconds.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["moves", "seconds"],
+          "properties": {
+            "moves": { "type": "integer", "minimum": 1 },
+            "seconds": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "solution": {
+          "description": "Optional proof that the level can be solved: one placement per piece, in the order of pieces. Tests use it; the game never shows it.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["at", "rotation"],
+            "properties": {
+              "at": { "$ref": "#/$defs/coordinate" },
+              "rotation": {
+                "description": "Rotation steps of the topology, applied before moving the piece's origin to \"at\".",
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "hexaSortPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["goal", "tray", "moveThresholds"],
+      "properties": {
+        "goal": {
+          "description": "Number of blocks of 10 or more tiles to remove to win (FR-53, FR-54, SORT-4, SORT-5).",
+          "type": "integer",
+          "minimum": 1
+        },
+        "tray": {
+          "description": "Parameters of the seeded generator that draws the stacks of the tray (SORT-6, NFR-05).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["seed", "colors", "stackSize"],
+          "properties": {
+            "seed": {
+              "description": "Seed of the random source. The same level always offers the same sequence of stacks.",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "colors": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/color" },
+              "minItems": 2,
+              "uniqueItems": true
+            },
+            "stackSize": {
+              "description": "Number of tiles in each drawn stack, both ends included.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": {
+                "min": { "type": "integer", "minimum": 1 },
+                "max": { "type": "integer", "minimum": 1, "maximum": 9 }
+              }
+            }
+          }
+        },
+        "moveThresholds": {
+          "description": "The two thresholds of SORT-7, the larger first: one extra star for each threshold the moves are <= to.",
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    }
+  }
+}
