@@ -85,6 +85,19 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Errors and corrections:** The first Hexa Fit draft made the player rotate pieces up to 5 steps and jumped from many solutions to one at level 5; detected in the generator's report; pieces now arrive 1 to 3 steps away, and the solution count falls more gradually (levels 5–7 have about 4 solutions).
 - **Lessons:** Generate many candidates and choose by a measurable criterion (solution count, simulated win rate) rather than designing one level at a time; the numbers make "progressive difficulty" checkable.
 
+### 2026-11-24 — Level files checked in CI ([odd/tasks/0004-level-check.md](odd/tasks/0004-level-check.md))
+
+- **Author:** Valentina Maza
+- **Tool / model:** Claude (claude.ai agent session, configured model Claude Opus 5.5).
+- **Task:** Turn the level checks of tasks 0002 and 0003 into a repository tool that runs in CI and before a push (FR-23, FR-43, C-13).
+- **Prompts (faithful paraphrase; original in Spanish):**
+  - "Yes" (answering the offer to put the level check in the repository and CI).
+- **Result:** `tool/check-levels.mjs` with nine invalid fixtures, `npm run check:levels`, a CI step and a pre-push command.
+- **Team modifications:** Pending review.
+- **Errors and corrections:** None found.
+- **Verification:** the 27 files pass; breaking one Hexa Fit solution and one Hexa Sort difficulty makes the check fail; each fixture fails for its own rule.
+- **Lessons:** A check that was only run once in a chat is not evidence for the future; a check in CI with fixtures that must fail keeps proving itself.
+
 ## Critical evaluation
 
 - **Approximate share of code with AI assistance:** TODO (updated at the end of the project).

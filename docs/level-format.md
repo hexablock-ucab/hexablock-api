@@ -81,7 +81,7 @@ One rotation step for `"hex"` maps `[q, r]` to `[-r, q + r]` (Red Blob Games, *H
 
 ## Rules JSON Schema cannot check
 
-These rules need geometry or compare two fields. The level builder of the client (ADR-0006) and the API's validator for each `gameId` (ADR-0004) check them, and an invalid level fails with a domain error before anyone plays it.
+These rules need geometry or compare two fields. The level builder of the client (ADR-0006) and the API's validator for each `gameId` (ADR-0004) check them, and an invalid level fails with a domain error before anyone plays it. Until that code exists, `tool/check-levels.mjs` checks them in CI on every file of `levels/` and `docs/schemas/examples/`, and proves each rule still works by rejecting the files in `tool/fixtures/invalid-levels/`.
 
 | ID | Rule | Source |
 |---|---|---|
