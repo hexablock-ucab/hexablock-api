@@ -107,6 +107,18 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Verification:** The rules were checked against Esposito (2024), chapter 6 (aggregates, methods over properties, anemic model) and the course's Clean Architecture class; the diff was reviewed in the pull request, and commitlint and CI run on it.
 - **Lessons:** Writing the modeling rules before the domain model gives the reviewer agent something concrete to check, and the table of roles prepares the answer to "is this a DDD pattern or a GoF pattern?" in the defense.
 
+### 2026-11-16 — Level format for Hexa Fit and Hexa Sort (D3, [odd/tasks/0002-level-format.md](odd/tasks/0002-level-format.md))
+
+- **Author:** Valentina Maza
+- **Tool / model:** Claude (claude.ai agent session, configured model Claude Opus 5.5).
+- **Task:** Draft the level format that the rules of `hexablock-app` #13 leave to D3: one JSON Schema for both variants, one example per variant and the rules the schema cannot check (FR-04, FR-14, FR-23, FR-40, NFR-02, NFR-05).
+- **Prompts (faithful paraphrase; original in Spanish):**
+  - "OK, done. Can't we keep going?" (after setting up Flutter, with D3 as the next task of the plan)
+- **Result:** `docs/level-format.md`, `docs/schemas/level.schema.json` and two example levels. Checked with Ajv 8 and a script for the geometric rules: both examples valid, nine invalid variants rejected.
+- **Team modifications:** Pending: the team reviews the specs, the seed stored in the level and the 1–5 difficulty scale.
+- **Errors and corrections:** None found yet.
+- **Lessons:** Let the rules document say *what* a level needs and keep the format to *how*; then each field traces to a rule.
+
 ## Critical evaluation
 
 - **Approximate share of code with AI assistance:** TODO (updated at the end of the project).
