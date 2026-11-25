@@ -40,6 +40,7 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 | 2026-10-27 to 2026-10-28 | [Project foundation: course analysis, repositories, tooling and documentation](#2026-10-27-to-2026-10-28--project-foundation-course-analysis-repositories-tooling-and-documentation-setup-no-task-document) |
 | 2026-11-08 | [Professor's answers of 2026-11-05 applied to the requirements](#2026-11-08--professors-answers-of-2026-11-05-applied-to-the-requirements-docs-no-task-document) |
 | 2026-11-09 | [README and AI usage log adjusted after reviewing reference repositories](#2026-11-09--readme-and-ai-usage-log-adjusted-after-reviewing-reference-repositories-docs-no-task-document) |
+| 2026-11-25 | [Domain model rules without DDD](#2026-11-25--domain-model-rules-without-ddd-docs-no-task-document) |
 
 ### 2026-10-27 to 2026-10-28 — Project foundation: course analysis, repositories, tooling and documentation (setup; no task document)
 
@@ -102,6 +103,20 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Team modifications:** Pending: the team reviews the specs, the seed stored in the level and the 1–5 difficulty scale.
 - **Errors and corrections:** None found yet.
 - **Lessons:** Let the rules document say *what* a level needs and keep the format to *how*; then each field traces to a rule.
+
+### 2026-11-25 — Domain model rules without DDD (docs; no task document)
+
+- **Author:** Eduard Velasco
+- **Pull request:** this pull request, paired with the `docs/domain-model-without-ddd` pull request of hexablock-app
+- **Tool / model:** Claude Code (VS Code extension), model Claude Opus 5.5.
+- **Task:** Add the domain modeling rules the team keeps, without DDD tactical patterns, before the API's domain model (D4) is written (C-05, C-32, NFR-03).
+- **Prompts (faithful paraphrase; originals in Spanish):**
+  - "Read task 0005 and the change plan of 2026-11-24 (sections 1, 2.3 and 2.9). Without asking me between steps, and stopping only if something contradicts the assignment: finish T7 in api #22 and push; do the api half of the `docs/domain-model-without-ddd` pair with its pull request open; when api #21 merges, resolve the `AI_USAGE.md` conflict in api #22. Follow AGENTS.md. Do not merge anything."
+- **Result:** A *Domain model* subsection in `AGENTS.md` §4 (one name per concept, behavior with its data, no setters, read-only getters, value objects, classes with identity, Prisma models outside the model, and a table of roles without DDD); a *Stereotypes and UML style* section in `docs/diagrams/README.md` with two stereotypes and read-only values drawn as `{readOnly}` attributes; a *Domain model* question in the `architecture-reviewer` agent. The wording mirrors the app half, with the API's own examples.
+- **Team modifications:** The team decided on 2026-11-13 to leave DDD out and on 2026-11-24 to allow read-only getters; the AI wrote the text from those decisions and the change plan. The API keeps the rule "no setters, changes only through named operations" and leaves out the app's rules for immutable game state, Memento, the random generator and Observer, which no API requirement needs. The team reviews the wording in this pull request.
+- **Errors and corrections:** None detected in this change.
+- **Verification:** The cited chapters were checked in the team's library before citing them (Martin 2017, ch. 20; Esposito 2024, ch. 6). Every edit replaced text found exactly once; the diff was reviewed, and commitlint and CI run on it.
+- **Lessons:** A rule set is easier to defend when each rule names the requirement it serves. The DDD rules of api #15 were reverted before api #14 merged, so they never reached `main`; this entry records the rules that replace them.
 
 ## Critical evaluation
 
