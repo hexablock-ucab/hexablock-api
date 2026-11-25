@@ -41,30 +41,37 @@ When the assignment is ambiguous, or a choice affects grading and is not the tea
 
 ## 3. Architecture rules (Clean Architecture)
 
-> **Decision status.** The assignment fixes Clean Architecture and the Dependency Rule (C-05) and at least one aspect for a cross-cutting concern, required in this repository (C-08): those rules are binding now.
-> NestJS with TypeScript (ADR-0002), the folder layout below (ADR-0003) and the contract-first model by `gameId` (ADR-0004) are **Proposed**.
-> Until the team accepts those ADRs, do not scaffold the project or choose a database; ask the user instead.
+> **Decision status.** The assignment fixes Clean Architecture and the Dependency Rule (C-05) and at least one aspect for a cross-cutting concern, required in this repository (C-08). The team accepted NestJS with TypeScript, PostgreSQL, Prisma and Argon2id (ADR-0002), the module-first layout below (ADR-0003), the contract-first model by `gameId` (ADR-0004) and ADMIN-only level changes (ADR-0006). All of these are binding.
 
-Four concentric layers. Source code dependencies point inward only (the Dependency Rule).
+Modules first, then layers (ADR-0003). Each module, and `src/shared/`, has four concentric layers. Source code dependencies point inward only (the Dependency Rule).
 
-Proposed layout (ADR-0003):
+```
+src/
+├── main.ts, app.module.ts      # composition root
+├── shared/                     # domain/, application/, interface-adapters/, frameworks/
+└── modules/
+    └── <accounts|progress|levels>/
+        ├── index.ts            # the module's only public entry
+        └── domain/, application/, interface-adapters/, frameworks/
+```
 
-| Layer | Folder | May import |
+| Layer | Folder (in each module and in `shared/`) | May import |
 |---|---|---|
-| 1. Entities (domain) | `src/domain/` | nothing outside `src/domain/` and the TypeScript standard library |
-| 2. Use cases (application) | `src/application/` | `src/domain/` |
-| 3. Interface adapters | `src/interface-adapters/` (controllers, presenters, DTOs, mappers, repository implementations) | layers 1–2 |
-| 4. Frameworks and drivers | `src/frameworks/` (NestJS modules, ORM schema, database, JWT, configuration, `main.ts`) | everything |
+| 1. Entities (domain) | `domain/` | its own `domain/`, `src/shared/domain/` and the TypeScript standard library |
+| 2. Use cases (application) | `application/` | layer 1 |
+| 3. Interface adapters | `interface-adapters/` (controllers, presenters, DTOs, mappers, repository implementations) | layers 1–2 |
+| 4. Frameworks and drivers | `frameworks/` (the Nest module, framework wiring; in `shared/`, the Prisma schema and client and the configuration) | everything |
 
-Binding rules (C-05, C-08, C-22, NFR-02, NFR-03):
+Binding rules (C-05, C-08, C-22, C-29, NFR-02, NFR-03):
 
-- The domain and the use cases never import `@nestjs/*`, an ORM, `express`, `jsonwebtoken`, `bcrypt` or any I/O library. Framework decorators live in layers 3–4 only.
-- Ports (interfaces) are declared in the inner layer that **uses** them, usually `src/application/ports/`. Adapters implement them in an outer layer.
+- A module uses another module only through `src/modules/<module>/index.ts`, never a file inside it. Each module owns its tables.
+- The domain and the use cases never import `@nestjs/*`, an ORM, `express`, `jsonwebtoken`, `bcrypt`, `argon2` or any I/O library. Framework decorators live in layers 3–4 only.
+- Ports (interfaces) are declared in the inner layer that **uses** them, usually the module's `application/ports/`. Adapters implement them in an outer layer.
 - Use cases are generic over `gameId`. No `if (gameId === 'hexa-sort')` outside the level-schema validators registered per `gameId`.
 - Data crosses boundaries as domain types inward and as DTOs outward. Mappers live in layer 3. Controllers never return entities or ORM rows.
 - Cross-cutting concerns (logging, timing, error policy, authorization, caching) are aspects: decorators or proxies around use cases (C-08). Use cases never call the logger.
 - Time, IDs and randomness are injected through ports, never created inside the domain. Tests use fixed or seeded sources.
-- `tool/check-architecture.mjs` enforces the import rules and the `gameId` rule from `tool/architecture-rules.json`, in the `pre-push` hook and in CI. A violation fails the build.
+- `tool/check-architecture.mjs` enforces the import rules, the module boundary and the `gameId` rule from `tool/architecture-rules.json`, in the `pre-push` hook and in CI. A violation fails the build.
 - **Do not over-engineer.** Add an abstraction only when a requirement, an ADR or a second real implementation needs it. Abstractions declared in an ADR are requirements, not speculation.
 
 Low-level details are replaceable: a low-level detail such as the database may change shortly before the defense, never the architecture, and the design must absorb that change without rewriting the project (C-31, NFR-02). The backend is one deployable service organized in modules, not microservices (C-29), and it is deployed on a public cloud host (C-28). A hard-coded low-level detail is the main design flaw to avoid.

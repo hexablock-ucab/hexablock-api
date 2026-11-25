@@ -1,10 +1,12 @@
 {
-  "$comment": "Minimum line coverage enforced in CI by tool/check-coverage.mjs, only where the graded logic lives (domain and use cases). The total is reported but does not block (totalMin: null). Paths follow the PROPOSED layout of ADR-0003.",
+  "$comment": "Minimum line coverage enforced in CI by tool/check-coverage.mjs, only where the graded logic lives (domain and use cases). The total is reported but does not block (totalMin: null). Paths follow the module-first layout of ADR-0003 (Accepted); a path segment '*' matches any one module and all its files add up to one area line.",
   "coverage": {
     "totalMin": null,
     "areas": [
-      { "path": "src/domain", "min": 90 },
-      { "path": "src/application", "min": 90 }
+      { "path": "src/shared/domain", "min": 90 },
+      { "path": "src/shared/application", "min": 90 },
+      { "path": "src/modules/*/domain", "min": 90 },
+      { "path": "src/modules/*/application", "min": 90 }
     ]
   }
 }

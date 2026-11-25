@@ -73,6 +73,18 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Errors and corrections:** None found yet.
 - **Lessons:** Let the rules document say *what* a level needs and keep the format to *how*; then each field traces to a rule.
 
+### 2026-11-25 — Accept the ADRs, with the module-first layout and ADMIN-only levels ([odd/tasks/0005-accept-adrs.md](odd/tasks/0005-accept-adrs.md))
+
+- **Author:** Eduard Velasco
+- **Tool / model:** Claude Code 2.1.321 — Claude Opus 5.5 for orchestration and the documents; the `odd-worker` sub-agent for the architecture scripts and their tests; the `odd-verify` sub-agent for the verdict per spec.
+- **Task:** Accept ADR-0001 to ADR-0005 with the team's decisions of 2026-11-24, write ADR-0006 (ADMIN-only level changes), fix the `version` rule of the level format, and teach the architecture check the module-first layout (C-05, C-22, C-26, C-29, FR-14, FR-21, FR-23, NFR-03, NFR-06).
+- **Prompts (faithful paraphrase; original in Spanish, verbatim in the task document):**
+  - "Continue with phase 0 of the API, following the change plan of 2026-11-24 … the API branches of `docs/requirements-baseline` (2.8) and `docs/accept-adrs` (2.9, which includes ADR-0003 by modules and the `version` text of the format), with the pull requests open. Follow AGENTS.md. Do not merge anything."
+- **Result:** The ADR texts, ADR-0006, `AGENTS.md` §3, the `version` text of `docs/level-format.md` and the schema, and the rule paths with `*`, a module-boundary rule and tests of the two scripts with `node:test`.
+- **Team modifications:** Pending: the three members review the ADRs and record their agreement in the pull request.
+- **Errors and corrections:** The AI first cited "issue #5" as if it were in this repository; the issue that ADR-0006 answers is in the team workspace, and the reference was corrected before the commit.
+- **Lessons:** Check every chapter and issue a document cites before citing it; a wrong reference in an Accepted ADR is hard to fix later.
+
 ## Critical evaluation
 
 - **Approximate share of code with AI assistance:** TODO (updated at the end of the project).
