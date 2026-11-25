@@ -73,6 +73,18 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Errors and corrections:** None found yet.
 - **Lessons:** Let the rules document say *what* a level needs and keep the format to *how*; then each field traces to a rule.
 
+### 2026-11-25 — Requirements baseline (docs; no task document)
+
+- **Author:** Eduard Velasco
+- **Tool / model:** Claude Code 2.1.321 — Claude Opus 5.5. The requirements for the optional account (FR-11, FR-12, FR-20, FR-21) and usability (NFR-07) originate in the team's requirements specification, which a teammate drafted with Gemini; the team reviewed that draft critically on 2026-11-24 before anything entered this catalog.
+- **Task:** Turn the catalog into the *Baseline* with the decisions the team took on 2026-11-10, 2026-11-11 and 2026-11-24 (C-05, C-09, C-17, C-19, C-25, FR-11, FR-12, FR-16 to FR-21, FR-23, FR-25, FR-53, NFR-06, NFR-07).
+- **Prompts (faithful paraphrase; original in Spanish):**
+  - "Continue with phase 0 of the API, following the change plan of 2026-11-24 (sections 1, 2.2, 2.3, 2.8 and 2.9), without asking me between steps: … the API branches of `docs/requirements-baseline` (2.8) and `docs/accept-adrs` (2.9), with the pull requests open. Follow AGENTS.md. Do not merge anything."
+- **Result:** The catalog changes listed in its revision history row of 2026-11-25. The change plan of the team's workspace gave the content of each row; the AI wrote the English text and checked each requirement against the plan and the specification's table of quality requirements.
+- **Team modifications:** Pending: the three members review the catalog and record their agreement in the pull request.
+- **Errors and corrections:** None detected yet.
+- **Lessons:** Write each decision with its ID and reason before asking the AI to edit the catalog; the edit is then a translation, not a design step.
+
 ## Critical evaluation
 
 - **Approximate share of code with AI assistance:** TODO (updated at the end of the project).
