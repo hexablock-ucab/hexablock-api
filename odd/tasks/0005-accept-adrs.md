@@ -2,7 +2,7 @@
 
 - **Status:** Verifying
 - **Owner:** Eduard Velasco
-- **Branch / PR:** `docs/accept-adrs` · #
+- **Branch / PR:** `docs/accept-adrs` · #22
 - **Requirements:** C-05, C-08, C-22, C-24, C-26, C-29, FR-14, FR-20 to FR-25, NFR-02, NFR-03, NFR-06
 - **ADRs:** 0001 to 0005 (accepted here), 0006 (new)
 
@@ -17,7 +17,7 @@ The ADRs are still *Proposed*, so `AGENTS.md` forbids scaffolding the project. S
 ## Scope
 
 - In scope: ADR-0001 to ADR-0005 accepted with their adjustments; new ADR-0006; the `version` text of the level format and its schema; `AGENTS.md` §3 (decision status and layout); task 0001 loses its wait condition; `tool/architecture-rules.json`, `tool/quality-gates.json`, `tool/check-architecture.mjs` and `tool/check-coverage.mjs` with tests; CI runs those tests.
-- Out of scope: the README architecture table and project status (api #14 rewrites that table; updated after it merges, see *Next step*); the sync ADR (D6) and the hosting provider ADR (D11); scaffolding NestJS (task 0001).
+- Out of scope: the sync ADR (D6) and the hosting provider ADR (D11); scaffolding NestJS (task 0001).
 
 ## Specs
 
@@ -40,6 +40,7 @@ The ADRs are still *Proposed*, so `AGENTS.md` forbids scaffolding the project. S
 - `AGENTS.md` (§3 only), `odd/tasks/0001-bootstrap-nestjs.md`, `odd/tasks/0005-accept-adrs.md`, `AI_USAGE.md`
 - `tool/architecture-rules.json`, `tool/quality-gates.json`, `tool/check-architecture.mjs`, `tool/check-coverage.mjs`, `tool/test/**`
 - `.github/workflows/ci.yml` (one step for the tool tests)
+- `README.md` (project status, stack sentence and *Architecture* section)
 
 ## Tasks
 
@@ -49,7 +50,7 @@ The ADRs are still *Proposed*, so `AGENTS.md` forbids scaffolding the project. S
 - [x] **T4** (S7–S11) Rules, scripts and their tests (`odd-worker`).
 - [x] **T5** Verify every spec (`odd-verify`).
 - [x] **T6** `log-ai-usage` entry.
-- [ ] **T7** After api #14 merges: rebase, then update the README architecture table and project status.
+- [x] **T7** After api #14 merges: rebase, then update the README architecture table and project status.
 
 ## Verification
 
@@ -74,7 +75,7 @@ None. The decisions come from the team's change plan of 2026-11-24 (decisions 1,
 
 ## Next step
 
-The three members record their agreement in the pull request; after api #14 merges, rebase and do T7.
+The three members record their agreement in the pull request. When api #21 merges, merge `main` into this branch and keep both `AI_USAGE.md` entries.
 
 ## Log
 
@@ -82,3 +83,5 @@ The three members record their agreement in the pull request; after api #14 merg
 - 2026-11-25 — Claude: the plan's §2.9 recommends teaching the scripts to expand `*` rather than listing each module's paths; applied, so a new module needs no rule change.
 - 2026-11-25 — odd-worker: T4 done, RED 13 of 18 failing, GREEN 18 of 18; `check-architecture` "0 of 5 rules applied" (no `src/` yet).
 - 2026-11-25 — Claude: `node --test tool/test/` fails on Node 21+ with a folder argument; chose the glob `"tool/test/*.test.mjs"` in CI and here instead of an index.js entry (no double run). odd-verify not run; the parent session re-ran the four verification commands.
+- 2026-11-25 — Eduard Velasco (prompt): "Lee odd/tasks/0005-accept-adrs.md y ../hexablock-workspace/docs/auditoria/2026-11-24-plan-de-cambios-pr.md (secciones 1, 2.3 y 2.9). Sin pedirme confirmación entre pasos; para solo si algo contradice el enunciado: 1. Termina T7: la tabla del README en api #22, y haz push. 2. La mitad api del par docs/domain-model-without-ddd (2.3), con el PR abierto. 3. Cuando api #21 se fusione, resuelve el conflicto de AI_USAGE.md en api #22. Sigue AGENTS.md. No fusiones nada."
+- 2026-11-25 — Claude: T7 done. api #14 was already in the branch (merge `a38fa1a`), so no rebase was needed. The README now shows the three modules and `src/shared`, the four layers inside each, the module boundary, Prisma in the outer layers and ADR-0006; the project status says the ADRs are accepted once the three agree in #22.
