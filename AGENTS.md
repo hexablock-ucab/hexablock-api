@@ -83,6 +83,33 @@ Low-level details are replaceable: a low-level detail such as the database may c
 - Prefer the platform and already-installed packages. A new dependency needs a one-line justification in the PR and must be mainstream and maintained.
 - Lint and format are clean before you finish; CI fails on any warning.
 
+### Domain model
+
+Sources: Martin, *Clean Architecture* (2017), chapter 20 (entities hold the critical business rules); Esposito, *Clean Architecture with .NET* (2024), chapter 6 (the anemic model). `docs/domain-model.md` (deliverable D4) lists every domain class with its role; update it in the same PR as the code.
+
+Why these rules and no others: the scope has no invariant that spans several objects and no other part of the system that reacts to domain events, so aggregates, domain services and domain events would add structure without meeting any requirement. Each rule below has its own reason: value objects come from C-32; behavior in the domain comes from the Dependency Rule and the isolated tests of entities and use cases (NFR-03, C-23a).
+
+- **One name per concept.** Every concept has one name, recorded in the glossary of `docs/domain-model.md` with its Spanish term. Code, tests, diagrams and documents use that name and no synonym; renaming a concept renames the code in the same PR.
+- **Behavior lives with its data.** The business rules live in domain classes, which expose operations named after the business intent (`recordLevelCompleted`, `mergeWith(incoming)`) and questions the rules ask (`bestStarsFor(levelId)`, `hasCompleted(levelId)`). Each operation checks its rules before it changes anything. Use cases load, call, save and respond; they never decide a business rule. When a use case reads a domain object, decides and writes the result back, the decision belongs inside the domain object (*tell, don't ask*). This is how the code avoids the anemic model.
+- **No setters.** State changes only through named operations. No setters and no public fields that can change; fields are `private readonly` where they never change.
+- **Read-only getters.** A read-only getter is allowed where something outside needs the value (a mapper, a presenter, a test) and cannot change the object through it. Whoever reads a value never takes a decision that belongs to the domain; if it does, move the decision into the domain.
+- **Value objects** are immutable (an operation returns a new value: `score.add(points)`), compare by value with an `equals` method, validate themselves when created, and carry the behavior of their concept.
+- **Classes with identity** (a user account, a player's progress, a level definition) compare by their identity, which is a value object (`UserId`, `LevelId`).
+- **Persistence stays outside the model.** The Prisma models live in the outer layers (ADR-0002). The repository adapter converts them and rebuilds the domain object through a named static method (`PlayerProgress.restore(...)`), so the domain needs no public setter or empty constructor for the ORM.
+- **Label each class with the role it really plays**, in code names, docs and diagrams:
+
+| Class or kind | Role |
+|---|---|
+| `UserId`, `GameId`, `LevelId`, `Score` | Value object |
+| User account, `PlayerProgress`, `LevelDefinition` | Class with identity |
+| Level-schema validator per `gameId` | GoF Strategy selected by `gameId` |
+| `ProgressService` | Service that implements a use case (layer 2) |
+| `ProgressRepository` | Repository: the port lives in layer 2, where it is used (section 3); its adapter in layer 3 |
+| Logging, error policy or authorization decorator (C-08) | Aspect (GoF Decorator around a use case) |
+| DTOs, controllers, presenters, mappers, Prisma models | Boundary types of layers 3 and 4 |
+
+In the class diagram, value objects and classes with identity carry their stereotype and every other class keeps its own role, as `docs/diagrams/README.md` states.
+
 ## 5. Tests
 
 - Test first when a deterministic, runnable test exists: RED, then GREEN, then REFACTOR.
