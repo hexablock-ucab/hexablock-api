@@ -58,3 +58,5 @@ The greedy player wins 100% of levels 1–4 and about 80% of levels 9–10.
 ## Change a level
 
 Edit its file and add 1 to `version`, so synced clients download it again (FR-14). Never change `levelId` or reuse a `number`.
+
+Then run `npm run check:levels`. It checks every file against the schema and the rules of `docs/level-format.md`, the numbering and the difficulty order, and that every Hexa Fit level has a solution that covers its figure. It also runs before every push that touches a level and in CI.
