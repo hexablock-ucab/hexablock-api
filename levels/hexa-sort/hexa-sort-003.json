@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "gameId": "hexa-sort",
+  "levelId": "hexa-sort-003",
+  "number": 3,
+  "version": 1,
+  "difficulty": 2,
+  "board": {
+    "topology": "hex",
+    "shape": {
+      "kind": "regular",
+      "radius": 2
+    }
+  },
+  "payload": {
+    "goal": 2,
+    "tray": {
+      "seed": 1003,
+      "colors": ["red", "cyan", "green", "yellow"],
+      "stackSize": { "min": 2, "max": 4 }
+    },
+    "moveThresholds": [23, 15]
+  }
+}

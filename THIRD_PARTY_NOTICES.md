@@ -12,6 +12,7 @@ The team cites every source of code, algorithms, assets and tools that it did no
 
 | Tool | License | Used for |
 |---|---|---|
+| [Ajv](https://ajv.js.org) | MIT | Validates the level files against `docs/schemas/level.schema.json` in `tool/check-levels.mjs` |
 | [commitlint](https://commitlint.js.org) | MIT | Checks commit messages (Conventional Commits) |
 | [lefthook](https://github.com/evilmartians/lefthook) | MIT | Git hooks |
 | [actions/checkout](https://github.com/actions/checkout), [actions/setup-node](https://github.com/actions/setup-node) | MIT | CI |
