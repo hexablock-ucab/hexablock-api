@@ -6,11 +6,13 @@
     "prepare": "lefthook install",
     "check:architecture": "node tool/check-architecture.mjs",
     "check:test-names": "node tool/check-test-names.mjs",
-    "check:coverage": "node tool/check-coverage.mjs"
+    "check:coverage": "node tool/check-coverage.mjs",
+    "check:levels": "node tool/check-levels.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "ajv": "^8.20.0",
     "lefthook": "^2.2.2"
   },
   "engines": {

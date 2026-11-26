@@ -12,3 +12,6 @@ pre-push:
       run: node tool/check-architecture.mjs
     test-names:
       run: node tool/check-test-names.mjs
+    levels:
+      glob: "{levels/**,docs/schemas/**,tool/check-levels.mjs,tool/fixtures/invalid-levels/**}"
+      run: node tool/check-levels.mjs
