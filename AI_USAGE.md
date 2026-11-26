@@ -41,6 +41,7 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 | 2026-11-08 | [Professor's answers of 2026-11-05 applied to the requirements](#2026-11-08--professors-answers-of-2026-11-05-applied-to-the-requirements-docs-no-task-document) |
 | 2026-11-09 | [README and AI usage log adjusted after reviewing reference repositories](#2026-11-09--readme-and-ai-usage-log-adjusted-after-reviewing-reference-repositories-docs-no-task-document) |
 | 2026-11-16 | [Level format for Hexa Fit and Hexa Sort](#2026-11-16--level-format-for-hexa-fit-and-hexa-sort-d3-oddtasks0002-level-formatmd) |
+| 2026-11-25 | [Accept the ADRs, with the module-first layout and ADMIN-only levels](#2026-11-25--accept-the-adrs-with-the-module-first-layout-and-admin-only-levels-oddtasks0005-accept-adrsmd-pr-22) |
 | 2026-11-25 | [Requirements baseline](#2026-11-25--requirements-baseline-docs-no-task-document-pr-21) |
 | 2026-11-25 | [Domain model rules without DDD](#2026-11-25--domain-model-rules-without-ddd-docs-no-task-document) |
 
@@ -145,6 +146,19 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Verification:** The cited chapters were checked in the team's library before citing them (Martin 2017, ch. 20; Esposito 2024, ch. 6). Every edit replaced text found exactly once; the diff was reviewed, and commitlint and CI run on it.
 - **Lessons:** A rule set is easier to defend when each rule names the requirement it serves. The DDD rules of api #15 were reverted before api #14 merged, so they never reached `main`; this entry records the rules that replace them.
 
+### 2026-11-25 — Accept the ADRs, with the module-first layout and ADMIN-only levels ([odd/tasks/0005-accept-adrs.md](odd/tasks/0005-accept-adrs.md), PR #22)
+
+- **Author:** Eduard Velasco
+- **Tool / model:** Claude Code 2.1.321 — Claude Opus 5.5 for orchestration and the documents; the `odd-worker` sub-agent for the architecture scripts and their tests; the `odd-verify` sub-agent for the verdict per spec.
+- **Task:** Accept ADR-0001 to ADR-0005 with the team's decisions of 2026-11-24, write ADR-0006 (ADMIN-only level changes), fix the `version` rule of the level format, and teach the architecture check the module-first layout (C-05, C-22, C-26, C-29, FR-14, FR-21, FR-23, NFR-03, NFR-06).
+- **Prompts (faithful paraphrase; original in Spanish, verbatim in the task document):**
+  - "Continue with phase 0 of the API, following the change plan of 2026-11-24 … the API branches of `docs/requirements-baseline` (2.8) and `docs/accept-adrs` (2.9, which includes ADR-0003 by modules and the `version` text of the format), with the pull requests open. Follow AGENTS.md. Do not merge anything."
+- **Result:** The ADR texts, ADR-0006, `AGENTS.md` §3, the `version` text of `docs/level-format.md` and the schema, and the rule paths with `*`, a module-boundary rule and tests of the two scripts with `node:test`.
+- **Verification:** `node --test "tool/test/*.test.mjs"` (18 tests; 13 failed before the scripts changed), `node tool/check-architecture.mjs`; the ADR texts compared with the change plan.
+- **Team modifications:** Open until the merge: the three members (Eduard Velasco, Ali Dahouk, Valentina Maza) review the ADRs and record their agreement in PR #22; any change they ask for is listed here before merging.
+- **Errors and corrections:** The AI first cited "issue #5" as if it were in this repository; the issue that ADR-0006 answers is in the team workspace, and the reference was corrected before the commit.
+- **Lessons:** Check every chapter and issue a document cites before citing it; a wrong reference in an Accepted ADR is hard to fix later.
+- 
 ### 2026-11-25 — Requirements baseline (docs; no task document; PR #21)
 
 - **Author:** Eduard Velasco

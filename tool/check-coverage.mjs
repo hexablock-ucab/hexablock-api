@@ -3,7 +3,8 @@
  * Quality gate: minimum line coverage, per area and in total.
  * Reads every lcov.info under the given roots and the thresholds in
  * tool/quality-gates.json. Paths in lcov files are matched by prefix,
- * relative to the repository root.
+ * relative to the repository root. An area path may hold `*` as one whole
+ * segment (any one module); the files of every match add up to one line.
  *
  * Usage: node tool/check-coverage.mjs [--config tool/quality-gates.json]
  */
@@ -52,14 +53,20 @@ if (files.size === 0) {
   process.exit(0);
 }
 
+// An area path becomes a prefix regex in which `*` stands for one path segment.
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const areaMatcher = (pattern) =>
+  new RegExp('^' + pattern.split('/').map((s) => (s === '*' ? '[^/]+' : escape(s))).join('/'));
+
 const pct = (h, f) => (f === 0 ? 100 : (100 * h) / f);
 const failures = [];
 const report = [];
 for (const area of coverage.areas) {
+  const matches = areaMatcher(area.path);
   let found = 0;
   let hit = 0;
   for (const [file, c] of files) {
-    if (file.startsWith(area.path)) { found += c.found; hit += c.hit; }
+    if (matches.test(file)) { found += c.found; hit += c.hit; }
   }
   if (found === 0) continue;
   const value = pct(hit, found);

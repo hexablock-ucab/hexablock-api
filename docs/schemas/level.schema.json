@@ -26,7 +26,7 @@
       "minimum": 1
     },
     "version": {
-      "description": "Edit counter of this level, starting at 1. It grows by 1 every time the level changes, so a client knows which levels to download again (FR-14).",
+      "description": "Edit counter of this level, starting at 1, so a client knows which levels to download again (FR-14). Whoever changes the level raises it, by convention by 1 (the file in levels/ or the ADMIN's PUT body). The API does not compute it and rejects with 409 a version that is not greater than the stored one; the seed writes a level only when the file carries a greater version.",
       "type": "integer",
       "minimum": 1
     },

@@ -30,6 +30,9 @@ jobs:
       - name: Test names
         run: node tool/check-test-names.mjs
 
+      - name: Tool tests
+        run: node --test "tool/test/*.test.mjs"
+
       - name: Install dependencies
         run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
 

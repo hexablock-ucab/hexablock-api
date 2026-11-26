@@ -1,40 +1,46 @@
 {
-  "$comment": "Architecture rules as checks (C-05, C-22, NFR-03). Paths follow the PROPOSED layout of ADR-0003; update them in the same PR that accepts or changes that ADR. Rules whose folders do not exist yet are skipped.",
+  "$comment": "Architecture rules as checks (C-05, C-22, C-29, NFR-03). Paths follow the module-first layout of ADR-0003 (Accepted): src/modules/<module>/{domain,application,interface-adapters,frameworks} plus src/shared/ with the same four folders; a path segment '*' matches any one module. Update them in the same PR that changes that ADR. Rules whose folders do not exist yet are skipped.",
   "sourceExtensions": [".ts"],
   "rules": [
     {
       "id": "domain-is-framework-free",
-      "paths": ["src/domain"],
+      "paths": ["src/shared/domain", "src/modules/*/domain"],
       "forbidden": [
         { "pattern": "from\\s+['\"]@nestjs/", "reason": "The domain must not depend on NestJS." },
         { "pattern": "from\\s+['\"](@prisma/|typeorm|drizzle-orm|mongoose|pg)['\"/]", "reason": "The domain must not depend on a database library." },
-        { "pattern": "from\\s+['\"](express|jsonwebtoken|bcrypt|bcryptjs|axios)['\"]", "reason": "The domain must not depend on I/O or security libraries." },
+        { "pattern": "from\\s+['\"](express|jsonwebtoken|bcrypt|bcryptjs|argon2|axios)['\"]", "reason": "The domain must not depend on I/O or security libraries." },
         { "pattern": "from\\s+['\"](\\.\\./)+(application|interface-adapters|frameworks)/", "reason": "Dependency Rule: the domain must not import outer layers." }
       ]
     },
     {
       "id": "use-cases-depend-only-on-domain",
-      "paths": ["src/application"],
+      "paths": ["src/shared/application", "src/modules/*/application"],
       "forbidden": [
-        { "pattern": "from\\s+['\"]@nestjs/", "reason": "Use cases must not depend on NestJS; they are wired in src/frameworks." },
+        { "pattern": "from\\s+['\"]@nestjs/", "reason": "Use cases must not depend on NestJS; they are wired in the frameworks layer." },
         { "pattern": "from\\s+['\"](@prisma/|typeorm|drizzle-orm|mongoose|pg)['\"/]", "reason": "Use cases depend on repository ports, not on a database library." },
-        { "pattern": "from\\s+['\"](express|jsonwebtoken|bcrypt|bcryptjs|axios)['\"]", "reason": "Use cases depend on ports, not on I/O or security libraries." },
+        { "pattern": "from\\s+['\"](express|jsonwebtoken|bcrypt|bcryptjs|argon2|axios)['\"]", "reason": "Use cases depend on ports, not on I/O or security libraries." },
         { "pattern": "from\\s+['\"](\\.\\./)+(interface-adapters|frameworks)/", "reason": "Dependency Rule: use cases must not import outer layers." }
       ]
     },
     {
       "id": "adapters-do-not-import-frameworks",
-      "paths": ["src/interface-adapters"],
+      "paths": ["src/shared/interface-adapters", "src/modules/*/interface-adapters"],
       "forbidden": [
         { "pattern": "from\\s+['\"](\\.\\./)+frameworks/", "reason": "Dependency Rule: interface adapters must not import the frameworks layer." }
       ]
     },
     {
+      "id": "modules-use-each-other-through-index",
+      "kind": "module-boundary",
+      "modulesRoot": "src/modules",
+      "reason": "A module reaches another module only through its public entry src/modules/<module>/index.ts (C-29, ADR-0003)."
+    },
+    {
       "id": "no-game-specific-code-in-the-core",
-      "paths": ["src/domain", "src/application"],
-      "except": ["src/domain/level-schemas"],
+      "paths": ["src/shared/domain", "src/modules/*/domain", "src/shared/application", "src/modules/*/application"],
+      "except": ["src/modules/levels/domain"],
       "forbidden": [
-        { "pattern": "['\"]hexa-(lines|fit|sort|merge)['\"]", "reason": "gameId is data: no code path for one specific game outside the level-schema validators (FR-21, FR-23)." }
+        { "pattern": "['\"]hexa-(lines|fit|sort|merge)['\"]", "reason": "gameId is data: no code path for one specific game outside the level-schema validators of the levels domain (FR-21, FR-23)." }
       ]
     }
   ]

@@ -26,7 +26,7 @@ FR-04 allows JSON or YAML. JSON is read by Dart (`dart:convert`) and by Node wit
 | `gameId` | `"hexa-fit"` \| `"hexa-sort"` | The variant. It chooses the payload. |
 | `levelId` | string, `hexa-fit-007` | Stable identifier: `gameId`, a hyphen and the number in three digits. It never changes. |
 | `number` | integer ≥ 1 | Position in the variant's progression. "Next level" is `number + 1` (FR-06). |
-| `version` | integer ≥ 1 | Edit counter. It grows by 1 every time the level changes, so sync downloads only new or changed levels (FR-14). |
+| `version` | integer ≥ 1 | Edit counter, so sync downloads only new or changed levels (FR-14). Whoever changes the level raises it, by convention by 1: the author of the file in `levels/`, or the ADMIN in the body of the `PUT` (ADR-0006). The API does not compute it: it rejects with 409 a version that is not greater than the stored one. The seed writes a level only when the file carries a greater version than the database. So the file and the stored level stay the same object. |
 | `difficulty` | integer 1–5 | The designer's estimate, used to check that difficulty is progressive (FR-46, FR-55). It changes nothing in the game. |
 | `board` | object | The board (next section). |
 | `payload` | object | The section of the variant (Hexa Fit, Hexa Sort below). |
@@ -74,7 +74,7 @@ One rotation step for `"hex"` maps `[q, r]` to `[-r, q + r]` (Red Blob Games, *H
 
 - `goal`: the number of blocks of 10 or more tiles to remove to win (FR-53, FR-54, SORT-4, SORT-5).
 - `tray`: the parameters of the seeded generator (SORT-6).
-  - `seed`: 0 to 2³² − 1. **Decision proposed by D3:** the level stores the seed, so a level always offers the same stacks. Every player gets the same level, which keeps the per-level leaderboard fair (FR-22) and lets the designer tune `moveThresholds` against a known sequence. A replay with the same seed gives the same game (NFR-05).
+  - `seed`: 0 to 2³² − 1. **The level stores the seed** (team decision of 2026-11-24), so a level always offers the same stacks. Every player gets the same level, which keeps the per-level leaderboard fair (FR-22) and lets the designer tune `moveThresholds` against a known sequence. A replay with the same seed gives the same game (NFR-05).
   - `colors`: the colors in play, at least 2, no repeats. Names, not hex codes: the client maps each name to its palette and its glyph (`red`, `orange`, `yellow`, `green`, `cyan`, `violet`, as in the UI mockups).
   - `stackSize`: the number of tiles in each drawn stack, both ends included, at most 9, so that a stack never arrives already holding a block to remove.
 - `moveThresholds`: the two thresholds of SORT-7, the larger first. A won level earns 1 star, +1 for each threshold the moves are ≤ to.
@@ -100,6 +100,7 @@ These rules need geometry or compare two fields. The level builder of the client
 One file per level, named after its `levelId` (`hexa-fit-001.json`).
 The client bundles them under one folder per `gameId`; the exact asset path is the client's choice.
 The API stores and returns the same object, so a level downloaded on sync and a bundled level are read by the same adapter.
+`levels/` of this repository is the single source of the levels (ADR-0004): a script copies the files into the client, and the database is seeded from the same files.
 
 ## Out of scope
 
