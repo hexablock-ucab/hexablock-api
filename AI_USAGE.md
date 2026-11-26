@@ -40,6 +40,8 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 | 2026-10-27 to 2026-10-28 | [Project foundation: course analysis, repositories, tooling and documentation](#2026-10-27-to-2026-10-28--project-foundation-course-analysis-repositories-tooling-and-documentation-setup-no-task-document) |
 | 2026-11-08 | [Professor's answers of 2026-11-05 applied to the requirements](#2026-11-08--professors-answers-of-2026-11-05-applied-to-the-requirements-docs-no-task-document) |
 | 2026-11-09 | [README and AI usage log adjusted after reviewing reference repositories](#2026-11-09--readme-and-ai-usage-log-adjusted-after-reviewing-reference-repositories-docs-no-task-document) |
+| 2026-11-16 | [Level format for Hexa Fit and Hexa Sort](#2026-11-16--level-format-for-hexa-fit-and-hexa-sort-d3-oddtasks0002-level-formatmd) |
+| 2026-11-25 | [Requirements baseline](#2026-11-25--requirements-baseline-docs-no-task-document-pr-21) |
 | 2026-11-25 | [Domain model rules without DDD](#2026-11-25--domain-model-rules-without-ddd-docs-no-task-document) |
 
 ### 2026-10-27 to 2026-10-28 — Project foundation: course analysis, repositories, tooling and documentation (setup; no task document)
@@ -142,6 +144,19 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Errors and corrections:** None detected in this change.
 - **Verification:** The cited chapters were checked in the team's library before citing them (Martin 2017, ch. 20; Esposito 2024, ch. 6). Every edit replaced text found exactly once; the diff was reviewed, and commitlint and CI run on it.
 - **Lessons:** A rule set is easier to defend when each rule names the requirement it serves. The DDD rules of api #15 were reverted before api #14 merged, so they never reached `main`; this entry records the rules that replace them.
+
+### 2026-11-25 — Requirements baseline (docs; no task document; PR #21)
+
+- **Author:** Eduard Velasco
+- **Tool / model:** Claude Code 2.1.321 — Claude Opus 5.5. The requirements for the optional account (FR-11, FR-12, FR-20, FR-21) and usability (NFR-07) originate in the team's requirements specification, which a teammate drafted with Gemini; the team reviewed that draft critically on 2026-11-24 before anything entered this catalog.
+- **Task:** Turn the catalog into the *Baseline* with the decisions the team took on 2026-11-10, 2026-11-11 and 2026-11-24 (C-05, C-09, C-17, C-19, C-25, FR-11, FR-12, FR-16 to FR-21, FR-23, FR-25, FR-53, NFR-06, NFR-07).
+- **Prompts (faithful paraphrase; original in Spanish):**
+  - "Continue with phase 0 of the API, following the change plan of 2026-11-24 (sections 1, 2.2, 2.3, 2.8 and 2.9), without asking me between steps: … the API branches of `docs/requirements-baseline` (2.8) and `docs/accept-adrs` (2.9), with the pull requests open. Follow AGENTS.md. Do not merge anything."
+- **Result:** The catalog changes listed in its revision history row of 2026-11-25. The change plan of the team's workspace gave the content of each row; the AI wrote the English text and checked each requirement against the plan and the specification's table of quality requirements.
+- **Verification:** each changed row compared with the change plan and with the specification's table of quality requirements (RS-01 to RS-13); commitlint and the pre-push checks.
+- **Team modifications:** Open until the merge: the three members (Eduard Velasco, Ali Dahouk, Valentina Maza) review the catalog and record their agreement in PR #21; any change they ask for is listed here before merging.
+- **Errors and corrections:** None detected yet.
+- **Lessons:** Write each decision with its ID and reason before asking the AI to edit the catalog; the edit is then a translation, not a design step.
 
 ## Critical evaluation
 
