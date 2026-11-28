@@ -41,9 +41,12 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 | 2026-11-08 | [Professor's answers of 2026-11-05 applied to the requirements](#2026-11-08--professors-answers-of-2026-11-05-applied-to-the-requirements-docs-no-task-document) |
 | 2026-11-09 | [README and AI usage log adjusted after reviewing reference repositories](#2026-11-09--readme-and-ai-usage-log-adjusted-after-reviewing-reference-repositories-docs-no-task-document) |
 | 2026-11-16 | [Level format for Hexa Fit and Hexa Sort](#2026-11-16--level-format-for-hexa-fit-and-hexa-sort-d3-oddtasks0002-level-formatmd) |
+| 2026-11-16 | [The 15 Hexa Fit and 10 Hexa Sort levels](#2026-11-16--the-15-hexa-fit-and-10-hexa-sort-levels-oddtasks0003-hand-designed-levelsmd) |
+| 2026-11-24 | [Level files checked in CI](#2026-11-24--level-files-checked-in-ci-oddtasks0004-level-checkmd) |
 | 2026-11-25 | [Accept the ADRs, with the module-first layout and ADMIN-only levels](#2026-11-25--accept-the-adrs-with-the-module-first-layout-and-admin-only-levels-oddtasks0005-accept-adrsmd-pr-22) |
 | 2026-11-25 | [Requirements baseline](#2026-11-25--requirements-baseline-docs-no-task-document-pr-21) |
 | 2026-11-25 | [Domain model rules without DDD](#2026-11-25--domain-model-rules-without-ddd-docs-no-task-document) |
+| 2026-11-28 | [Level fixes from the review of #19 and #20](#2026-11-28--level-fixes-from-the-review-of-19-and-20-oddtasks0004-level-checkmd) |
 
 ### 2026-10-27 to 2026-10-28 — Project foundation: course analysis, repositories, tooling and documentation (setup; no task document)
 
@@ -171,6 +174,19 @@ Project rules for agents: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 - **Team modifications:** Open until the merge: the three members (Eduard Velasco, Ali Dahouk, Valentina Maza) review the catalog and record their agreement in PR #21; any change they ask for is listed here before merging.
 - **Errors and corrections:** None detected yet.
 - **Lessons:** Write each decision with its ID and reason before asking the AI to edit the catalog; the edit is then a translation, not a design step.
+
+### 2026-11-28 — Level fixes from the review of #19 and #20 ([odd/tasks/0004-level-check.md](odd/tasks/0004-level-check.md))
+
+- **Author:** Valentina Maza
+- **Tool / model:** Claude (claude.ai agent session, configured model Claude Opus 5.5).
+- **Task:** Apply Eduard's non-blocking review of #19 and #20: Hexa Fit pieces that reached the tray already solved, two pairs of Hexa Sort levels with the same seed, and a level check that crashed on a broken JSON file.
+- **Prompts (faithful paraphrase; original in Spanish):**
+  - The team's messages with Eduard's review, pasted with no other request.
+- **Result:** 9 Hexa Fit levels with the piece turned 1–3 steps and their par moves recomputed; levels 6 and 9 of Hexa Sort with a new seed won by the simulator within the 3★ threshold; all 11 levels at `version` 2. The check now reports a broken file once and goes on, and enforces both rules; a broken-JSON fixture added.
+- **Team modifications:** Pending review.
+- **Errors and corrections:** The generator of task 0003 counted rotation steps but did not check that a piece symmetric under 180° ends up different from its solved position — detected by Eduard's review; fixed in the levels and now checked in CI. The seed search started at `1000 + number` and could land on the next level's seed — detected by the same review; the check now rejects repeated seeds.
+- **Verification:** `node tool/check-levels.mjs` passes; putting back the old level 7, a repeated seed or a broken file each makes it fail with one clear line.
+- **Lessons:** Every review finding became a rule in CI, so it cannot come back.
 
 ## Critical evaluation
 

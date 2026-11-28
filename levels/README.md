@@ -12,24 +12,24 @@ Difficulty grows from 1 to 5, three levels per step in Hexa Fit and two in Hexa 
 
 | # | Difficulty | Cells | Pieces (cells each) | Solutions | Par moves | Par time |
 |---|---|---|---|---|---|---|
-| 1 | 1 | 7 | 2 (3, 4) | 6 | 4 | 30 s |
-| 2 | 1 | 8 | 3 (3, 2, 3) | 2 | 8 | 40 s |
+| 1 | 1 | 7 | 2 (3, 4) | 6 | 5 | 30 s |
+| 2 | 1 | 8 | 3 (3, 2, 3) | 2 | 9 | 40 s |
 | 3 | 1 | 10 | 3 (3, 4, 3) | 2 | 9 | 40 s |
-| 4 | 2 | 12 | 4 (3, 2, 3, 4) | 6 | 10 | 50 s |
+| 4 | 2 | 12 | 4 (3, 2, 3, 4) | 6 | 11 | 50 s |
 | 5 | 2 | 13 | 4 (2, 4, 4, 3) | 4 | 11 | 50 s |
 | 6 | 2 | 15 | 4 (5, 3, 4, 3) | 4 | 13 | 50 s |
-| 7 | 3 | 16 | 5 (4, 3, 3, 4, 2) | 4 | 13 | 55 s |
+| 7 | 3 | 16 | 5 (4, 3, 3, 4, 2) | 4 | 15 | 55 s |
 | 8 | 3 | 18 | 5 (5, 3, 3, 3, 4) | 1 | 18 | 55 s |
 | 9 | 3 | 19 | 5 (3, 4, 4, 3, 5) | 1 | 17 | 55 s |
-| 10 | 4 | 21 | 6 (4, 3, 3, 3, 5, 3) | 1 | 17 | 75 s |
-| 11 | 4 | 22 | 6 (3, 4, 3, 4, 5, 3) | 1 | 17 | 75 s |
-| 12 | 4 | 24 | 6 (5, 5, 3, 3, 4, 4) | 1 | 15 | 75 s |
-| 13 | 5 | 26 | 7 (4, 5, 3, 3, 3, 4, 4) | 1 | 18 | 90 s |
+| 10 | 4 | 21 | 6 (4, 3, 3, 3, 5, 3) | 1 | 18 | 75 s |
+| 11 | 4 | 22 | 6 (3, 4, 3, 4, 5, 3) | 1 | 18 | 75 s |
+| 12 | 4 | 24 | 6 (5, 5, 3, 3, 4, 4) | 1 | 16 | 75 s |
+| 13 | 5 | 26 | 7 (4, 5, 3, 3, 3, 4, 4) | 1 | 20 | 90 s |
 | 14 | 5 | 28 | 7 (3, 3, 4, 5, 4, 5, 4) | 1 | 25 | 90 s |
-| 15 | 5 | 30 | 8 (3, 5, 2, 4, 5, 4, 3, 4) | 1 | 26 | 100 s |
+| 15 | 5 | 30 | 8 (3, 5, 2, 4, 5, 4, 3, 4) | 1 | 27 | 100 s |
 
 How the difficulty grows: more cells and pieces, and fewer ways to solve the figure (counted by an exact-cover solver); from level 8 every figure has one solution.
-Each piece reaches the tray turned 1 to 3 rotation steps away from its place in the reference solution, so the player has to rotate it.
+Each piece reaches the tray turned 1 to 3 rotation steps away from its place in the reference solution, so the player has to rotate it; only a piece that looks the same in every rotation arrives as it is. `tool/check-levels.mjs` enforces it.
 
 - **Par moves** = pieces placed + the fewest rotation steps of the reference solution + half the pieces, rounded up, as room for mistakes (FIT-3, FIT-4).
 - **Par time** = 14 s + 8 s per piece (+10 s at difficulty 4, +20 s at 5), rounded up to 5 s (FIT-3, FIT-5).
@@ -59,4 +59,4 @@ The greedy player wins 100% of levels 1–4 and about 80% of levels 9–10.
 
 Edit its file and add 1 to `version`, so synced clients download it again (FR-14). Never change `levelId` or reuse a `number`.
 
-Then run `npm run check:levels`. It checks every file against the schema and the rules of `docs/level-format.md`, the numbering and the difficulty order, and that every Hexa Fit level has a solution that covers its figure. It also runs before every push that touches a level and in CI.
+Then run `npm run check:levels`. Every Hexa Sort level needs its own seed, so no two levels offer the same stacks. It checks every file against the schema and the rules of `docs/level-format.md`, the numbering and the difficulty order, and that every Hexa Fit level has a solution that covers its figure. It also runs before every push that touches a level and in CI.

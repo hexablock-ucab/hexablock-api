@@ -23,7 +23,7 @@ Tasks 0002 and 0003 checked the levels with a script that stayed outside the rep
 
 - **S1** (FR-23): every file in `levels/` and `docs/schemas/examples/` validates against `docs/schemas/level.schema.json`.
 - **S2** (FR-40, FR-43): the rules L1, L2, F1–F5, S1 and S2 of `docs/level-format.md` hold for every file.
-- **S3** (FR-46, FR-55): in each folder of `levels/`, the file name is the `levelId`, numbers run 1..N with no gap, difficulty never decreases, and every Hexa Fit level has a solution.
+- **S3** (FR-46, FR-55, FIT-2, SORT-6): in each folder of `levels/`, the file name is the `levelId`, numbers run 1..N with no gap, difficulty never decreases, every Hexa Fit level has a solution, no Hexa Fit piece arrives already turned to its solved position, and no two Hexa Sort levels share a seed.
 - **S4**: each file in `tool/fixtures/invalid-levels/` is rejected, so a check that stops working fails the build.
 - **S5** (C-13): the check runs in CI on every pull request and before a push that touches a level.
 
@@ -62,3 +62,4 @@ Review and merge after #19.
 
 - 2026-11-24 — Valentina Maza (verbatim): "si" (answering the offer to put the level check in the repository and CI, and to prepare the script that copies the levels to the app).
 - 2026-11-24 — Valentina Maza with Claude (Opus 5.5, claude.ai): T1–T4 done; the check was proved by breaking one Fit solution and one Sort difficulty and seeing it fail.
+- 2026-11-28 — Review fixes (Valentina with Claude): a file that is not valid JSON or fails the schema is reported once and left out of the set checks (no crash, no cascade of numbering errors); new set rules: no Hexa Fit piece already turned to its solved position, no two Hexa Sort levels with the same seed; fixture `not-json.json` added (10 fixtures).
