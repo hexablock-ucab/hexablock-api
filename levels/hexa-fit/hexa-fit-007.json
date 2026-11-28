@@ -3,7 +3,7 @@
   "gameId": "hexa-fit",
   "levelId": "hexa-fit-007",
   "number": 7,
-  "version": 1,
+  "version": 2,
   "difficulty": 3,
   "board": {
     "topology": "hex",
@@ -15,18 +15,18 @@
   "payload": {
     "pieces": [
       { "cells": [[0, 0], [0, 1], [1, 0], [2, 0]] },
-      { "cells": [[0, 0], [1, -1], [2, -2]] },
+      { "cells": [[0, 0], [0, 1], [0, 2]] },
       { "cells": [[0, 0], [-1, 0], [-1, -1]] },
       { "cells": [[0, 0], [-1, 2], [0, 1], [0, 2]] },
-      { "cells": [[0, 0], [-1, 0]] }
+      { "cells": [[0, 0], [1, -1]] }
     ],
-    "par": { "moves": 13, "seconds": 55 },
+    "par": { "moves": 15, "seconds": 55 },
     "solution": [
       { "at": [-3, 1], "rotation": 1 },
-      { "at": [0, 1], "rotation": 3 },
+      { "at": [0, 1], "rotation": 1 },
       { "at": [0, -1], "rotation": 3 },
       { "at": [0, 0], "rotation": 1 },
-      { "at": [-2, 4], "rotation": 3 }
+      { "at": [-2, 4], "rotation": 1 }
     ]
   }
 }

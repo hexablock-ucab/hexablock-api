@@ -72,3 +72,4 @@ After the level format is approved, mark this PR ready; Valentina play-tests T5 
 - 2026-11-16 15:39 — Valentina (prompt): "si!!" (answering: "Puedo hacerlos ya con este formato, de fácil a difícil … ¿Le damos con los niveles?")
 - 2026-11-16 — Claude: generated and selected the levels with the scripts described in T1 and T2; validated all 25 files.
 - 2026-11-16 — Decision (Claude, for team review): par formulas and threshold rule written in `levels/README.md`; the Hexa Sort example of task 0002 updated to equal level 1 (thresholds 15 / 10 instead of 24 / 18).
+- 2026-11-28 — Review fixes (Valentina with Claude): 9 Hexa Fit pieces no longer arrive solved (S4 now holds for every piece that is not fully symmetric; par moves recomputed for levels 1, 2, 4, 7, 10–13 and 15); Hexa Sort levels 6 and 9 have their own seed (1600, 1902); the 11 levels are at `version` 2; `docs/schemas/examples/hexa-fit-001.json` equals level 1 again.

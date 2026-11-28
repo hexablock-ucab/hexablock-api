@@ -5,7 +5,10 @@
  * 1. Shape: each file validates against docs/schemas/level.schema.json (JSON Schema 2020-12).
  * 2. The rules JSON Schema cannot express, listed in docs/level-format.md (L1, L2, F1–F5, S1, S2).
  * 3. The level set in levels/: file name = levelId, numbers 1..N with no gap, difficulty never
- *    decreases, and every Hexa Fit level carries a solution that covers its figure (FR-43).
+ *    decreases, every Hexa Fit level carries a solution that covers its figure (FR-43) and no
+ *    piece reaches the tray already turned to its solved position (FIT-2), and no two Hexa Sort
+ *    levels share a seed.
+ *    A file that is not valid JSON or fails 1–2 is reported once and left out of these checks.
  * 4. Self-test: every file in tool/fixtures/invalid-levels/ must be rejected, so a check that
  *    stops working is noticed.
  *
@@ -123,6 +126,12 @@ function extraRules(level) {
   return errors;
 }
 
+// The normalized shape of a set of cells: sorted, then moved so the first cell is the origin.
+const shape = (cells) => {
+  const s = [...cells].sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+  return JSON.stringify(s.map((c) => c.map((v, j) => v - s[0][j] + 0)));
+};
+
 function check(file) {
   let level;
   try { level = JSON.parse(readFileSync(file, 'utf8')); } catch (e) { return [`not valid JSON: ${e.message}`]; }
@@ -137,21 +146,41 @@ let checked = 0;
 
 // 1–2. Every example and every level is valid.
 const levelDirs = existsSync(LEVELS) ? readdirSync(LEVELS).map((d) => path.join(LEVELS, d)).filter((d) => statSync(d).isDirectory()) : [];
+const broken = new Set();
 for (const file of [...jsonFiles(EXAMPLES), ...levelDirs.flatMap(jsonFiles)]) {
   checked += 1;
-  for (const e of check(file)) failures.push(`${file}: ${e}`);
+  const errors = check(file);
+  if (errors.length) broken.add(file);
+  for (const e of errors) failures.push(`${file}: ${e}`);
 }
 
 // 3. The level set of each variant.
 for (const dir of levelDirs) {
-  const levels = jsonFiles(dir).map((f) => ({ f, l: JSON.parse(readFileSync(f, 'utf8')) }));
+  const levels = jsonFiles(dir).filter((f) => !broken.has(f)).map((f) => ({ f, l: JSON.parse(readFileSync(f, 'utf8')) }));
+  const seeds = new Map();
+  const dirBroken = jsonFiles(dir).some((f) => broken.has(f)); // numbering is checked once every file of the folder is valid
   levels.sort((a, b) => a.l.number - b.l.number);
   levels.forEach(({ f, l }, i) => {
     if (path.basename(f) !== `${l.levelId}.json`) failures.push(`${f}: the file name must be ${l.levelId}.json`);
     if (path.basename(dir) !== l.gameId) failures.push(`${f}: a ${l.gameId} level is in the ${path.basename(dir)} folder`);
-    if (l.number !== i + 1) failures.push(`${f}: level numbers must run 1..N with no gap (expected ${i + 1})`);
+    if (!dirBroken && l.number !== i + 1) failures.push(`${f}: level numbers must run 1..N with no gap (expected ${i + 1})`);
     if (i > 0 && l.difficulty < levels[i - 1].l.difficulty) failures.push(`${f}: difficulty decreases after level ${i}`);
     if (l.gameId === 'hexa-fit' && !l.payload.solution) failures.push(`${f}: every bundled Hexa Fit level needs a solution (FR-43)`);
+    if (l.gameId === 'hexa-fit' && l.payload.solution) {
+      const topo = TOPOLOGIES[l.board.topology];
+      l.payload.pieces.forEach((piece, j) => {
+        const turns = [piece.cells];
+        for (let k = 1; k < 6; k++) turns.push(turns[k - 1].map(topo.rotate));
+        const solved = turns.at(l.payload.solution[j].rotation % 6);
+        const symmetric = new Set(turns.map(shape)).size === 1;
+        if (!symmetric && shape(piece.cells) === shape(solved)) failures.push(`${f}: piece ${j} reaches the tray already turned to its solved position (FIT-2)`);
+      });
+    }
+    if (l.gameId === 'hexa-sort') {
+      const seed = l.payload.tray.seed;
+      if (seeds.has(seed)) failures.push(`${f}: same seed (${seed}) as ${seeds.get(seed)}; each level needs its own sequence of stacks`);
+      else seeds.set(seed, path.basename(f));
+    }
   });
 }
 

@@ -3,7 +3,7 @@
   "gameId": "hexa-sort",
   "levelId": "hexa-sort-009",
   "number": 9,
-  "version": 1,
+  "version": 2,
   "difficulty": 5,
   "board": {
     "topology": "hex",
@@ -15,7 +15,7 @@
   "payload": {
     "goal": 6,
     "tray": {
-      "seed": 1009,
+      "seed": 1902,
       "colors": ["red", "cyan", "green", "yellow", "violet", "orange"],
       "stackSize": { "min": 3, "max": 6 }
     },

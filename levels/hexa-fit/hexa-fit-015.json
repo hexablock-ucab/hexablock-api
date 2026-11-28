@@ -3,7 +3,7 @@
   "gameId": "hexa-fit",
   "levelId": "hexa-fit-015",
   "number": 15,
-  "version": 1,
+  "version": 2,
   "difficulty": 5,
   "board": {
     "topology": "hex",
@@ -16,18 +16,18 @@
     "pieces": [
       { "cells": [[0, 0], [-1, 0], [0, -1]] },
       { "cells": [[0, 0], [1, -1], [3, -2], [2, -2], [2, -3]] },
-      { "cells": [[0, 0], [1, -1]] },
+      { "cells": [[0, 0], [0, 1]] },
       { "cells": [[0, 0], [0, -1], [0, -2], [1, -1]] },
       { "cells": [[0, 0], [0, -1], [1, 1], [1, 0], [2, -1]] },
       { "cells": [[0, 0], [1, -1], [2, -2], [2, -3]] },
       { "cells": [[0, 0], [0, 1], [1, 0]] },
       { "cells": [[0, 0], [1, 0], [2, 0], [3, 0]] }
     ],
-    "par": { "moves": 26, "seconds": 100 },
+    "par": { "moves": 27, "seconds": 100 },
     "solution": [
       { "at": [1, -2], "rotation": 3 },
       { "at": [2, -1], "rotation": 3 },
-      { "at": [2, 1], "rotation": 3 },
+      { "at": [2, 1], "rotation": 1 },
       { "at": [3, -4], "rotation": 2 },
       { "at": [-1, 0], "rotation": 2 },
       { "at": [0, -3], "rotation": 3 },

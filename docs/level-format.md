@@ -50,9 +50,9 @@ Unknown fields are errors everywhere (`additionalProperties: false`), so a typo 
 
 ```json
 "payload": {
-  "pieces": [ { "cells": [[0, 0], [1, 0], [1, -1]] }, { "cells": [[0, 0], [0, 1], [1, 1], [2, 0]] } ],
-  "par": { "moves": 4, "seconds": 30 },
-  "solution": [ { "at": [0, 0], "rotation": 0 }, { "at": [0, -1], "rotation": 1 } ]
+  "pieces": [ { "cells": [[0, 0], [1, -1], [0, -1]] }, { "cells": [[0, 0], [0, 1], [1, 1], [2, 0]] } ],
+  "par": { "moves": 5, "seconds": 30 },
+  "solution": [ { "at": [0, 0], "rotation": 1 }, { "at": [0, -1], "rotation": 1 } ]
 }
 ```
 
